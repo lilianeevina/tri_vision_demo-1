@@ -5,333 +5,452 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Tri Vision — Transport de bauxite, de la mine au port</title>
 <meta name="description" content="Tri Vision transporte votre bauxite de la mine au port : camions bennes, chauffeurs formés, suivi GPS, 24 h/24.">
-<link rel="preload" as="image" href="img/hero.webp">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Inter+Tight:wght@500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Inter+Tight:ital,wght@0,500;0,700;0,800;1,500&display=swap" rel="stylesheet">
 <style>
   :root{
-    --bg:#f6f4f1; --ink:#0d1b2e; --ink-2:#34404f; --muted:#6b7480; --line:#dcd8d2;
-    --blue:#1f5eff; --blue-2:#1748c7; --night:#0b1626;
-    --head:"Inter Tight",Inter,system-ui,sans-serif;
-    --ease:cubic-bezier(.22,.8,.2,1); --container:1240px;
+    --bg:#070b14; --bg-2:#0d1322; --ink:#eef2f8; --muted:#8d97a8; --line:rgba(255,255,255,.1);
+    --blue:#2f6bff; --blue-2:#5b8cff; --warm:#ff8a4c;
+    --head:"Inter Tight",Inter,system-ui,sans-serif; --ease:cubic-bezier(.22,.8,.2,1);
   }
   *{box-sizing:border-box;margin:0;padding:0}
-  html{scroll-behavior:smooth;scroll-padding-top:76px}
-  body{font-family:Inter,system-ui,sans-serif;background:var(--bg);color:var(--ink);line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+  html{scroll-behavior:smooth;scroll-padding-top:80px}
+  body{font-family:Inter,system-ui,sans-serif;background:var(--bg);color:var(--ink);line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:clip}
+  body.loading{overflow:hidden}
   img{display:block;max-width:100%}
   a{color:inherit}
-  .wrap{max-width:var(--container);margin:0 auto;padding:0 20px}
+  .wrap{max-width:1320px;margin:0 auto;padding:0 20px}
   @media (min-width:900px){.wrap{padding:0 48px}}
-  h1,h2,h3{font-family:var(--head);font-weight:600;letter-spacing:-.03em;line-height:1.02}
-  h2{font-size:clamp(34px,5vw,64px)}
-  .label{display:block;font-size:13px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--blue);margin-bottom:18px}
-  .lead{font-size:clamp(17px,1.5vw,19px);color:var(--muted);max-width:560px}
-  a:focus-visible,button:focus-visible,input:focus-visible,textarea:focus-visible{outline:3px solid var(--blue);outline-offset:3px}
-
-  /* ---------- motion ---------- */
-  .up{opacity:0;transform:translateY(28px);transition:opacity 1s var(--ease),transform 1s var(--ease);transition-delay:var(--d,0s)}
+  h1,h2,h3{font-family:var(--head);font-weight:800;letter-spacing:-.04em;line-height:.95}
+  h2{font-size:clamp(42px,7vw,104px)}
+  .label{display:inline-flex;align-items:center;gap:12px;font-size:12.5px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--blue-2);margin-bottom:24px}
+  .label::before{content:"";width:28px;height:1px;background:currentColor}
+  .lead{font-size:clamp(17px,1.5vw,20px);color:var(--muted);max-width:560px}
+  .outline{color:transparent;-webkit-text-stroke:1.5px rgba(238,242,248,.55)}
+  .blue{color:var(--blue-2)}
+  a:focus-visible,button:focus-visible,input:focus-visible,textarea:focus-visible,summary:focus-visible{outline:2px solid var(--blue-2);outline-offset:3px}
+  .up{opacity:0;transform:translateY(40px);transition:opacity 1.1s var(--ease),transform 1.1s var(--ease);transition-delay:var(--d,0s)}
   .up.in{opacity:1;transform:none}
-  .media{position:relative;overflow:hidden;border-radius:6px}
-  .media img{width:100%;height:100%;object-fit:cover;clip-path:inset(100% 0 0 0);transform:scale(1.18);transition:clip-path 1.4s var(--ease),transform 2.2s var(--ease);transition-delay:var(--d,0s)}
-  .media.in img{clip-path:inset(0 0 0 0);transform:scale(1.04)}
-  .px{will-change:transform}
-  @media (prefers-reduced-motion:reduce){
-    html{scroll-behavior:auto}
-    .up,.media img{opacity:1;transform:none!important;clip-path:none!important;transition:none}
-    .hero-img{animation:none!important}
-  }
+  .rv{overflow:hidden;border-radius:14px;position:relative}
+  .rv img{width:100%;height:100%;object-fit:cover;clip-path:inset(0 0 100% 0);transform:scale(1.2);transition:clip-path 1.5s var(--ease),transform 2.4s var(--ease);transition-delay:var(--d,0s)}
+  .rv.in img{clip-path:inset(0);transform:scale(1.02)}
 
-  /* ---------- header ---------- */
-  .hdr{position:fixed;top:0;left:0;right:0;z-index:50;color:#fff;transition:background-color .4s,color .4s,border-color .4s;border-bottom:1px solid transparent}
-  .hdr.solid{background:rgba(246,244,241,.92);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);color:var(--ink);border-bottom-color:var(--line)}
-  .nav{display:flex;align-items:center;justify-content:space-between;height:76px;gap:24px}
-  .logo{font-family:var(--head);font-weight:700;font-size:20px;letter-spacing:-.01em;text-decoration:none;display:flex;align-items:center;gap:10px}
-  .logo i{width:10px;height:10px;background:var(--blue);display:inline-block;transform:rotate(45deg)}
-  .nav ul{display:flex;gap:34px;list-style:none}
-  .nav ul a{position:relative;text-decoration:none;font-size:15px;opacity:.85;transition:opacity .2s}
-  .nav ul a:hover{opacity:1}
-  .nav ul a::after{content:"";position:absolute;left:0;right:0;bottom:-6px;height:1px;background:currentColor;transform:scaleX(0);transform-origin:right;transition:transform .4s var(--ease)}
-  .nav ul a:hover::after{transform:scaleX(1);transform-origin:left}
-  .btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;min-height:50px;padding:0 24px;border-radius:999px;font-weight:500;font-size:15px;text-decoration:none;border:1px solid transparent;cursor:pointer;font-family:inherit;transition:background-color .3s,color .3s,border-color .3s}
-  .btn svg{transition:transform .35s var(--ease)}
-  .btn:hover svg{transform:translateX(4px)}
+  /* loader */
+  #loader{position:fixed;inset:0;z-index:200;background:var(--bg);display:flex;flex-direction:column;justify-content:space-between;padding:28px 24px;transition:clip-path 1.2s var(--ease);clip-path:inset(0 0 0 0)}
+  #loader.done{clip-path:inset(0 0 100% 0)}
+  #loader .lt{font-family:var(--head);font-weight:800;font-size:14px;letter-spacing:.2em}
+  #loader .lc{font-family:var(--head);font-weight:800;font-size:clamp(90px,22vw,300px);line-height:.8;letter-spacing:-.05em;align-self:flex-end;font-variant-numeric:tabular-nums}
+  #loader .lb{position:absolute;left:0;bottom:0;height:3px;background:var(--blue);width:0}
+
+  /* cursor */
+  .cur,.cur-r{position:fixed;left:0;top:0;z-index:150;pointer-events:none;border-radius:50%;transform:translate(-50%,-50%);display:none}
+  .cur{width:8px;height:8px;background:#fff;mix-blend-mode:difference}
+  .cur-r{width:40px;height:40px;border:1px solid rgba(255,255,255,.5);display:none;place-items:center;font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:#fff;transition:width .35s var(--ease),height .35s var(--ease),background-color .35s,border-color .35s}
+  .cur-r.big{width:92px;height:92px;background:var(--blue);border-color:var(--blue)}
+  .cur-r span{opacity:0;transition:opacity .2s}
+  .cur-r.big span{opacity:1}
+  @media (pointer:fine){.cur{display:block}.cur-r{display:grid}}
+
+  /* header */
+  .hdr{position:fixed;top:0;left:0;right:0;z-index:60;transition:background-color .4s,border-color .4s,transform .5s var(--ease);border-bottom:1px solid transparent}
+  .hdr.solid{background:rgba(7,11,20,.8);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom-color:var(--line)}
+  .hdr.hide{transform:translateY(-100%)}
+  .nav{display:flex;align-items:center;justify-content:space-between;height:80px;gap:20px}
+  .logo{display:flex;align-items:center;gap:10px;font-family:var(--head);font-weight:800;font-size:19px;letter-spacing:.06em;text-decoration:none}
+  .logo i{width:11px;height:11px;background:var(--blue);transform:rotate(45deg);display:inline-block}
+  .nav ul{display:flex;gap:6px;list-style:none;padding:6px;border:1px solid var(--line);border-radius:999px;background:rgba(7,11,20,.35);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
+  .nav ul a{display:block;padding:8px 16px;border-radius:999px;font-size:14.5px;text-decoration:none;color:rgba(238,242,248,.8);transition:background-color .25s,color .25s}
+  .nav ul a:hover,.nav ul a.active{background:rgba(255,255,255,.1);color:#fff}
+  .btn{position:relative;display:inline-flex;align-items:center;justify-content:center;gap:10px;min-height:52px;padding:0 26px;border-radius:999px;font-weight:600;font-size:15px;text-decoration:none;border:1px solid transparent;cursor:pointer;font-family:inherit;overflow:hidden;isolation:isolate;transition:color .4s var(--ease),border-color .3s}
+  .btn::before{content:"";position:absolute;inset:0;z-index:-1;border-radius:inherit;transform:translateY(101%);transition:transform .5s var(--ease)}
+  .btn:hover::before{transform:none}
+  .btn svg{transition:transform .4s var(--ease)}
+  .btn:hover svg{transform:translateX(4px) rotate(-45deg)}
   .btn-blue{background:var(--blue);color:#fff}
-  .btn-blue:hover{background:var(--blue-2)}
-  .btn-line{border-color:rgba(255,255,255,.5);color:#fff}
-  .btn-line:hover{background:#fff;color:var(--ink)}
-  .nav .btn{min-height:42px;padding:0 18px}
-  .burger{display:none;width:44px;height:44px;border-radius:50%;border:1px solid currentColor;background:transparent;color:inherit;align-items:center;justify-content:center;cursor:pointer;opacity:.85}
-  @media (max-width:899px){.nav ul,.nav .btn{display:none}.burger{display:inline-flex}}
-  .mmenu{position:fixed;inset:0;z-index:49;background:var(--bg);display:flex;flex-direction:column;justify-content:center;padding:0 28px;gap:6px;opacity:0;pointer-events:none;transition:opacity .4s var(--ease)}
-  .mmenu.open{opacity:1;pointer-events:auto}
-  .mmenu a{font-family:var(--head);font-size:38px;font-weight:600;letter-spacing:-.03em;text-decoration:none;padding:6px 0;transform:translateY(16px);opacity:0;transition:transform .5s var(--ease),opacity .5s;transition-delay:calc(var(--i)*60ms)}
-  .mmenu.open a{transform:none;opacity:1}
-  body.menu-open .hdr{color:var(--ink);background:transparent;border-color:transparent;backdrop-filter:none}
+  .btn-blue::before{background:#fff}
+  .btn-blue:hover{color:var(--bg)}
+  .btn-ghost{border-color:rgba(255,255,255,.3);color:#fff}
+  .btn-ghost::before{background:#fff}
+  .btn-ghost:hover{color:var(--bg)}
+  .nav .btn{min-height:44px;padding:0 20px}
+  .burger{display:none;width:46px;height:46px;border-radius:50%;border:1px solid var(--line);background:rgba(7,11,20,.4);color:#fff;align-items:center;justify-content:center;cursor:pointer}
+  @media (max-width:979px){.nav ul,.nav .btn{display:none}.burger{display:inline-flex}}
+  .mmenu{position:fixed;inset:0;z-index:59;background:var(--bg);display:flex;flex-direction:column;justify-content:center;padding:0 24px;clip-path:circle(0 at calc(100% - 44px) 40px);transition:clip-path .8s var(--ease)}
+  .mmenu.open{clip-path:circle(150% at calc(100% - 44px) 40px)}
+  .mmenu a{font-family:var(--head);font-weight:800;font-size:clamp(40px,11vw,64px);letter-spacing:-.04em;line-height:1.1;text-decoration:none}
+  .mmenu a:hover{color:var(--blue-2)}
+  .mmenu .btn{margin-top:30px;align-self:flex-start}
 
-  /* ---------- hero ---------- */
-  .hero{position:relative;height:100vh;height:100svh;min-height:600px;overflow:hidden;color:#fff;background:#2a1a12}
-  .hero-img{position:absolute;inset:-6% -2%;background:url('img/hero.webp') 30% 55%/cover no-repeat;animation:kb 22s ease-out forwards}
-  @keyframes kb{from{transform:scale(1.12)}to{transform:scale(1)}}
-  .hero::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(11,22,38,.35) 0%,rgba(11,22,38,0) 30%,rgba(11,22,38,.15) 50%,rgba(11,22,38,.85) 100%)}
-  .hero-in{position:absolute;z-index:2;left:0;right:0;bottom:0;padding-bottom:clamp(36px,6vh,64px)}
-  .hero h1{font-size:clamp(44px,8vw,112px);max-width:12ch;margin-bottom:22px}
-  .hero h1 .ln{display:block;overflow:hidden}
-  .hero h1 .ln span{display:block;transform:translateY(110%);transition:transform 1.3s var(--ease)}
-  .hero.go h1 .ln span{transform:none}
-  .hero h1 .ln:nth-child(2) span{transition-delay:.12s}
-  .hero-row{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:28px}
-  .hero p{font-size:clamp(17px,1.5vw,19px);color:rgba(255,255,255,.85);max-width:430px}
-  .hero .acts{display:flex;flex-wrap:wrap;gap:12px}
-  .fade{opacity:0;transform:translateY(16px);transition:opacity 1s var(--ease),transform 1s var(--ease)}
-  .hero.go .fade{opacity:1;transform:none}
-  .hero.go .f1{transition-delay:.5s}.hero.go .f2{transition-delay:.65s}
-  .scrollcue{position:absolute;z-index:2;right:48px;top:50%;writing-mode:vertical-rl;font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.7);display:none;align-items:center;gap:14px}
-  .scrollcue::after{content:"";width:1px;height:60px;background:linear-gradient(rgba(255,255,255,.8),transparent);animation:cue 2.2s ease-in-out infinite}
-  @keyframes cue{0%{transform:scaleY(0);transform-origin:top}50%{transform:scaleY(1);transform-origin:top}51%{transform-origin:bottom}100%{transform:scaleY(0);transform-origin:bottom}}
-  @media (min-width:900px){.scrollcue{display:flex}}
+  /* hero */
+  .hero-wrap{height:175vh;position:relative}
+  .hero{position:sticky;top:0;height:100vh;height:100svh;overflow:hidden}
+  .frame{position:absolute;inset:0;overflow:hidden;background:#2b1a14;will-change:clip-path}
+  #scene{position:absolute;inset:0;width:100%;height:100%;display:block}
+  .frame.no3d{background:url('img/hero.webp') 30% 55%/cover}
+  .frame::after{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(120% 90% at 50% 40%,rgba(7,11,20,0) 40%,rgba(7,11,20,.55) 100%),linear-gradient(0deg,rgba(7,11,20,.92) 0%,rgba(7,11,20,.3) 38%,rgba(7,11,20,0) 60%,rgba(7,11,20,.35) 100%)}
+  .hero-txt{position:absolute;z-index:3;left:0;right:0;bottom:0;padding-bottom:clamp(30px,6vh,64px);will-change:transform,opacity}
+  .hero h1{font-size:clamp(56px,13vw,210px);line-height:.86;letter-spacing:-.055em;margin-bottom:28px}
+  .hero h1 .row{display:block;overflow:hidden;padding-bottom:.04em}
+  .hero h1 .ch{display:inline-block;transform:translateY(110%) rotate(6deg);transition:transform 1.2s var(--ease);transition-delay:calc(var(--i)*35ms + .1s)}
+  .go .hero h1 .ch{transform:none}
+  .hero-bot{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:24px}
+  .hero-bot p{max-width:440px;font-size:clamp(16px,1.4vw,19px);color:rgba(238,242,248,.82)}
+  .hero-bot .acts{display:flex;flex-wrap:wrap;gap:12px}
+  .hf{opacity:0;transform:translateY(20px);transition:opacity 1s var(--ease) .8s,transform 1s var(--ease) .8s}
+  .go .hf{opacity:1;transform:none}
+  .live{position:absolute;z-index:3;top:100px;left:0;right:0}
+  .live span{display:inline-flex;align-items:center;gap:10px;font-size:13px;color:rgba(238,242,248,.85);border:1px solid rgba(255,255,255,.2);border-radius:999px;padding:7px 14px;background:rgba(7,11,20,.35);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
+  .live b{width:8px;height:8px;border-radius:50%;background:#46e38a;box-shadow:0 0 0 0 rgba(70,227,138,.6);animation:pulse 2s infinite}
+  @keyframes pulse{70%{box-shadow:0 0 0 10px rgba(70,227,138,0)}100%{box-shadow:0 0 0 0 rgba(70,227,138,0)}}
 
-  section{padding:clamp(90px,12vw,160px) 0}
+  section{position:relative}
+  .pad{padding:clamp(100px,14vw,200px) 0}
 
-  /* ---------- statement ---------- */
-  .statement p{font-family:var(--head);font-weight:500;font-size:clamp(28px,4.2vw,56px);line-height:1.12;letter-spacing:-.03em;max-width:22ch}
-  .statement p .w{opacity:.16;transition:opacity .3s}
-  .statement p .w.on{opacity:1}
-  .statement .meta{display:flex;gap:40px;margin-top:48px;flex-wrap:wrap}
+  /* statement */
+  .stmt p{font-family:var(--head);font-weight:700;font-size:clamp(32px,5vw,76px);line-height:1.04;letter-spacing:-.04em}
+  .stmt .w{opacity:.14;transition:opacity .25s}
+  .stmt .w.on{opacity:1}
+  .stmt .w.hl.on{color:var(--blue-2)}
 
-  /* ---------- journey ---------- */
-  .step{display:grid;gap:36px;align-items:center;padding:clamp(40px,6vw,80px) 0;border-top:1px solid var(--line)}
-  @media (min-width:900px){.step{grid-template-columns:1.25fr 1fr;gap:80px}.step.rev .media{order:2}}
-  .step .media{aspect-ratio:4/3}
-  .step .media.tall{aspect-ratio:4/5;max-height:720px}
-  .step .num{font-family:var(--head);font-size:15px;font-weight:600;color:var(--muted);display:flex;align-items:center;gap:14px;margin-bottom:22px}
-  .step .num::after{content:"";flex:0 0 48px;height:1px;background:var(--line)}
-  .step h3{font-size:clamp(30px,3.6vw,46px);margin-bottom:18px}
-  .step ul{list-style:none;margin-top:26px;border-top:1px solid var(--line)}
-  .step li{display:flex;justify-content:space-between;gap:16px;padding:14px 0;border-bottom:1px solid var(--line);font-size:15.5px}
-  .step li span{color:var(--muted)}
+  /* horizontal journey */
+  .hs{position:relative}
+  .hs .pin{position:sticky;top:0;height:100vh;height:100svh;overflow:hidden;display:flex;align-items:center}
+  .track{display:flex;gap:clamp(20px,3vw,48px);padding:0 clamp(20px,4vw,48px);will-change:transform}
+  .panel{flex:0 0 auto;width:min(86vw,1000px);display:grid;gap:22px}
+  @media (min-width:900px){.panel{grid-template-columns:1.25fr 1fr;align-items:end;gap:44px}}
+  .panel.intro{width:min(86vw,620px);align-self:center;display:block}
+  .panel .ph{height:clamp(240px,52vh,600px);border-radius:16px;overflow:hidden;position:relative}
+  .panel .ph img{width:100%;height:100%;object-fit:cover;transform:scale(1.15);will-change:transform}
+  .panel .km{position:absolute;left:16px;top:16px;font-family:var(--head);font-weight:800;font-size:13px;letter-spacing:.08em;background:var(--blue);color:#fff;padding:6px 12px;border-radius:999px}
+  .panel .big{font-family:var(--head);font-weight:800;font-size:clamp(80px,12vw,180px);line-height:.8;letter-spacing:-.06em}
+  .panel h3{font-size:clamp(30px,3.4vw,48px);margin:14px 0 14px}
+  .panel p{color:var(--muted);font-size:16.5px;max-width:420px}
+  .hs-bar{position:absolute;left:clamp(20px,4vw,48px);right:clamp(20px,4vw,48px);bottom:30px;height:2px;background:var(--line)}
+  .hs-bar i{position:absolute;inset:0;background:var(--blue);transform-origin:left;transform:scaleX(0)}
 
-  /* ---------- figures ---------- */
-  .figs{display:grid;grid-template-columns:repeat(2,1fr);border-top:1px solid var(--line)}
+  /* expanding image */
+  .ex{height:240vh}
+  .ex .pin{position:sticky;top:0;height:100vh;height:100svh;display:grid;place-items:center;overflow:hidden}
+  .ex .box{position:relative;width:42vw;height:52vh;border-radius:24px;overflow:hidden;will-change:width,height}
+  .ex .box img{width:100%;height:100%;object-fit:cover;transform:scale(1.25)}
+  .ex .box::after{content:"";position:absolute;inset:0;background:rgba(7,11,20,.55);opacity:var(--o,0)}
+  .ex .over{position:absolute;inset:0;z-index:2;display:flex;flex-direction:column;justify-content:center;padding:0 clamp(20px,5vw,72px);opacity:var(--o,0);pointer-events:none}
+  .ex .over h2{font-size:clamp(40px,7vw,110px);margin-bottom:clamp(30px,5vh,60px)}
+  .figs{display:grid;grid-template-columns:repeat(2,1fr);gap:28px 20px;max-width:1100px}
   @media (min-width:900px){.figs{grid-template-columns:repeat(4,1fr)}}
-  .fig{padding:34px 24px 34px 0;border-bottom:1px solid var(--line)}
-  @media (min-width:900px){.fig{border-bottom:0;border-right:1px solid var(--line);padding:40px 28px}.fig:first-child{padding-left:0}.fig:last-child{border-right:0}}
-  .fig b{display:block;font-family:var(--head);font-weight:500;font-size:clamp(48px,6vw,84px);letter-spacing:-.04em;line-height:1}
-  .fig b small{font-size:.4em;color:var(--blue);margin-left:4px;letter-spacing:0}
-  .fig span{display:block;margin-top:12px;color:var(--muted);font-size:15px}
-  .figs-note{font-size:13px;color:var(--muted);margin-top:18px}
+  .figs b{display:block;font-family:var(--head);font-weight:800;font-size:clamp(46px,6vw,90px);letter-spacing:-.05em;line-height:1}
+  .figs b small{font-size:.4em;color:var(--blue-2);letter-spacing:0;margin-left:3px}
+  .figs span{color:rgba(238,242,248,.75);font-size:15px}
+  .ex .side{position:absolute;font-family:var(--head);font-weight:800;font-size:clamp(28px,5vw,80px);letter-spacing:-.04em;opacity:var(--s,1)}
+  .ex .s1{left:4vw;top:18vh}.ex .s2{right:4vw;bottom:18vh;text-align:right}
 
-  /* ---------- commitments (sticky) ---------- */
-  .commit{display:grid;gap:48px}
-  @media (min-width:900px){.commit{grid-template-columns:1fr 1fr;gap:80px;align-items:start}.commit .stick{position:sticky;top:110px}}
-  .commit .media{aspect-ratio:4/5}
-  .clist{list-style:none;margin-top:40px}
-  .citem{padding:30px 0;border-top:1px solid var(--line);display:grid;grid-template-columns:56px 1fr;gap:10px 18px}
-  .citem:last-child{border-bottom:1px solid var(--line)}
-  .citem .n{font-family:var(--head);font-size:14px;font-weight:600;color:var(--blue);padding-top:8px}
-  .citem h3{font-size:clamp(24px,2.4vw,30px)}
-  .citem p{grid-column:2;color:var(--muted);font-size:16px}
+  /* map */
+  .mapgrid{display:grid;gap:44px;align-items:center}
+  @media (min-width:960px){.mapgrid{grid-template-columns:.8fr 1.2fr;gap:70px}}
+  .map{position:relative;border:1px solid var(--line);border-radius:22px;background:radial-gradient(80% 80% at 30% 60%,#141d33,#0b1120);overflow:hidden;aspect-ratio:16/10}
+  .map svg{width:100%;height:100%}
+  .legend{display:grid;grid-template-columns:repeat(3,1fr);margin-top:34px;border-top:1px solid var(--line)}
+  .legend div{padding:18px 0}
+  .legend b{display:block;font-family:var(--head);font-weight:800;font-size:clamp(26px,3vw,40px);letter-spacing:-.03em}
+  .legend span{font-size:13.5px;color:var(--muted)}
+  .smallnote{font-size:12.5px;color:var(--muted);margin-top:10px}
 
-  /* ---------- gallery ---------- */
-  .gal{display:grid;grid-template-columns:repeat(12,1fr);gap:16px;margin-top:56px}
-  .gal .media{grid-column:span 12;aspect-ratio:4/3}
-  @media (min-width:900px){
-    .gal .g1{grid-column:1/8;aspect-ratio:16/10}
-    .gal .g2{grid-column:8/13;aspect-ratio:auto;height:100%}
-    .gal .g3{grid-column:1/6;aspect-ratio:4/3}
-    .gal .g4{grid-column:6/13;aspect-ratio:16/9}
-  }
-  .cap{position:absolute;left:16px;bottom:14px;z-index:2;font-size:13px;color:#fff;background:rgba(11,22,38,.55);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);border-radius:999px;padding:5px 12px;opacity:0;transform:translateY(8px);transition:opacity .8s var(--ease) .9s,transform .8s var(--ease) .9s}
-  .media.in .cap{opacity:1;transform:none}
+  /* fleet */
+  .cards{display:grid;gap:18px;margin-top:60px}
+  @media (min-width:900px){.cards{grid-template-columns:repeat(3,1fr)}}
+  .card{position:relative;border-radius:20px;overflow:hidden;min-height:440px;display:flex;flex-direction:column;justify-content:flex-end;padding:26px;isolation:isolate;transform-style:preserve-3d;transition:transform .2s ease-out}
+  .card img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:-2;transition:transform 1.2s var(--ease)}
+  .card:hover img{transform:scale(1.08)}
+  .card::before{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(180deg,rgba(7,11,20,.1) 20%,rgba(7,11,20,.92) 100%)}
+  .card .tag{position:absolute;top:22px;left:22px;font-size:12.5px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;border:1px solid rgba(255,255,255,.35);border-radius:999px;padding:5px 12px}
+  .card b{font-family:var(--head);font-weight:800;font-size:clamp(48px,5vw,72px);letter-spacing:-.05em;line-height:1}
+  .card h3{font-size:24px;margin:8px 0}
+  .card p{color:rgba(238,242,248,.75);font-size:15px}
 
-  /* ---------- drivers ---------- */
-  .drivers{display:grid;gap:48px;align-items:center}
-  @media (min-width:900px){.drivers{grid-template-columns:1fr 1.15fr;gap:80px}}
-  .drivers .pair{position:relative;padding-bottom:18%}
-  .drivers .m1{aspect-ratio:4/3}
-  .drivers .m2{position:absolute;right:-4%;bottom:0;width:52%;aspect-ratio:3/2;box-shadow:0 30px 60px rgba(13,27,46,.25);border:6px solid var(--bg);border-radius:10px}
-  @media (max-width:899px){.drivers .m2{right:0}}
-  .perks{list-style:none;margin:30px 0 34px;display:grid;gap:0;border-top:1px solid var(--line)}
-  .perks li{padding:14px 0;border-bottom:1px solid var(--line);display:flex;gap:14px;align-items:baseline}
-  .perks li::before{content:"";width:7px;height:7px;background:var(--blue);transform:rotate(45deg);flex:0 0 auto;position:relative;top:-2px}
-  .btn-dark{background:var(--ink);color:#fff}
-  .btn-dark:hover{background:var(--blue)}
+  /* engagements hover list */
+  .elist{list-style:none;margin-top:60px;border-top:1px solid var(--line)}
+  .erow{position:relative;display:grid;gap:8px 30px;padding:clamp(24px,3vw,40px) 0;border-bottom:1px solid var(--line);cursor:default}
+  @media (min-width:900px){.erow{grid-template-columns:90px 1fr 1fr;align-items:center}}
+  .erow .n{font-family:var(--head);font-weight:700;color:var(--muted);font-size:15px}
+  .erow h3{font-size:clamp(38px,6vw,92px);transition:transform .6s var(--ease),color .4s}
+  .erow p{color:var(--muted);font-size:16px;max-width:420px}
+  .erow::before{content:"";position:absolute;left:0;right:0;bottom:-1px;height:1px;background:var(--blue);transform:scaleX(0);transform-origin:left;transition:transform .7s var(--ease)}
+  @media (hover:hover){.erow:hover h3{transform:translateX(18px);color:var(--blue-2)}.erow:hover::before{transform:scaleX(1)}}
+  .float{position:fixed;left:0;top:0;z-index:40;width:300px;height:210px;border-radius:14px;overflow:hidden;pointer-events:none;opacity:0;transform:translate(-50%,-50%) scale(.6) rotate(-6deg);transition:opacity .35s,transform .5s var(--ease)}
+  .float.on{opacity:1;transform:translate(-50%,-50%) scale(1) rotate(-3deg)}
+  .float img{width:100%;height:100%;object-fit:cover}
+  @media (hover:none){.float{display:none}}
 
-  /* ---------- contact ---------- */
-  .contact{display:grid;gap:56px}
-  @media (min-width:900px){.contact{grid-template-columns:.9fr 1.1fr;gap:80px}}
-  .cinfo{margin-top:40px;border-top:1px solid var(--line)}
-  .cinfo div{padding:18px 0;border-bottom:1px solid var(--line)}
-  .cinfo small{display:block;font-size:13px;color:var(--muted);margin-bottom:2px}
-  .cinfo strong{font-weight:500;font-size:18px;word-break:break-word}
-  form{display:grid;gap:22px}
-  .r2{display:grid;gap:22px}
+  /* marquee */
+  .mq{overflow:hidden;white-space:nowrap;padding:clamp(40px,6vw,80px) 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+  .mq .t{display:inline-flex;gap:.4em;font-family:var(--head);font-weight:800;font-size:clamp(70px,12vw,200px);letter-spacing:-.05em;line-height:1;will-change:transform}
+  .mq .t span:nth-child(even){color:transparent;-webkit-text-stroke:1.5px rgba(238,242,248,.45)}
+  .mq .t i{font-style:normal;color:var(--blue)}
+
+  /* drivers */
+  .drv{display:grid;gap:50px;align-items:center}
+  @media (min-width:960px){.drv{grid-template-columns:1.1fr 1fr;gap:80px}}
+  .drv .pics{position:relative;padding:0 0 22% 0}
+  .drv .p1{aspect-ratio:4/3}
+  .drv .p2{position:absolute;right:-3%;bottom:0;width:50%;aspect-ratio:3/2;border:6px solid var(--bg);border-radius:16px}
+  .perks{list-style:none;margin:34px 0 36px;display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .perks li{border:1px solid var(--line);border-radius:14px;padding:18px;background:var(--bg-2);transition:border-color .3s,transform .4s var(--ease)}
+  .perks li:hover{border-color:var(--blue);transform:translateY(-4px)}
+  .perks b{display:block;font-size:16px;margin-bottom:2px}
+  .perks span{font-size:13.5px;color:var(--muted)}
+
+  /* faq */
+  .faq{display:grid;gap:40px}
+  @media (min-width:960px){.faq{grid-template-columns:.8fr 1.2fr;gap:80px}}
+  details{border-bottom:1px solid var(--line)}
+  details:first-child{border-top:1px solid var(--line)}
+  summary{list-style:none;display:flex;justify-content:space-between;align-items:center;gap:20px;padding:26px 0;cursor:pointer;font-family:var(--head);font-weight:700;font-size:clamp(19px,2vw,25px);letter-spacing:-.02em}
+  summary::-webkit-details-marker{display:none}
+  summary .pm{flex:0 0 auto;width:40px;height:40px;border-radius:50%;border:1px solid var(--line);position:relative;transition:background-color .3s,transform .5s var(--ease)}
+  summary .pm::before,summary .pm::after{content:"";position:absolute;left:50%;top:50%;width:14px;height:1.5px;background:#fff;transform:translate(-50%,-50%)}
+  summary .pm::after{transform:translate(-50%,-50%) rotate(90deg)}
+  details[open] summary .pm{background:var(--blue);border-color:var(--blue);transform:rotate(45deg)}
+  details .a{color:var(--muted);font-size:16.5px;padding:0 60px 26px 0;max-width:640px}
+
+  /* contact */
+  .ct{display:grid;gap:56px}
+  @media (min-width:960px){.ct{grid-template-columns:1fr 1fr;gap:80px}}
+  .ct h2{font-size:clamp(46px,8vw,120px)}
+  .cinfo{margin-top:40px;display:grid;gap:0;border-top:1px solid var(--line)}
+  .cinfo div{padding:18px 0;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}
+  .cinfo small{color:var(--muted);font-size:14px}
+  .cinfo strong{font-weight:500;font-size:17px}
+  form{display:grid;gap:26px;background:var(--bg-2);border:1px solid var(--line);border-radius:24px;padding:clamp(24px,3vw,40px)}
+  .r2{display:grid;gap:26px}
   @media (min-width:600px){.r2{grid-template-columns:1fr 1fr}}
   .fld{position:relative}
   .fld label{display:block;font-size:13px;color:var(--muted);margin-bottom:4px}
-  .fld input,.fld textarea{width:100%;border:0;border-bottom:1px solid #bdb7ae;background:transparent;font:inherit;font-size:18px;color:var(--ink);padding:10px 0;min-height:48px;border-radius:0}
-  .fld textarea{min-height:100px;resize:vertical}
+  .fld input,.fld textarea{width:100%;border:0;border-bottom:1px solid rgba(255,255,255,.22);background:transparent;font:inherit;font-size:18px;color:var(--ink);padding:10px 0;min-height:48px;border-radius:0}
+  .fld textarea{min-height:96px;resize:vertical}
+  .fld input::placeholder{color:#5d6678}
   .fld input:focus,.fld textarea:focus{outline:none}
-  .fld::after{content:"";position:absolute;left:0;right:0;bottom:0;height:2px;background:var(--blue);transform:scaleX(0);transform-origin:left;transition:transform .5s var(--ease)}
+  .fld::after{content:"";position:absolute;left:0;right:0;bottom:0;height:2px;background:var(--blue);transform:scaleX(0);transform-origin:left;transition:transform .6s var(--ease)}
   .fld:focus-within::after{transform:scaleX(1)}
-  .fld textarea+i{display:none}
   form .btn{justify-self:start}
   .note{font-size:14px;color:var(--muted)}
-  .note.ok{color:#1d6b3d}
+  .note.ok{color:#5fe0a0}
 
-  footer{background:var(--night);color:rgba(255,255,255,.65);padding:80px 0 30px;font-size:15px}
-  .fwrap{display:grid;gap:40px}
-  @media (min-width:900px){.fwrap{grid-template-columns:1.6fr 1fr 1fr}}
-  footer .big{font-family:var(--head);font-weight:600;font-size:clamp(30px,3.6vw,46px);letter-spacing:-.03em;line-height:1.05;color:#fff;max-width:14ch}
-  footer h4{color:#fff;font-size:14px;font-weight:600;margin-bottom:14px}
-  footer ul{list-style:none;display:grid;gap:10px}
+  footer{padding:90px 0 30px;border-top:1px solid var(--line)}
+  .fgrid{display:grid;gap:36px}
+  @media (min-width:900px){.fgrid{grid-template-columns:1.5fr 1fr 1fr}}
+  footer h4{font-size:14px;font-weight:600;margin-bottom:14px}
+  footer ul{list-style:none;display:grid;gap:10px;color:var(--muted)}
   footer a{text-decoration:none}
   footer a:hover{color:#fff}
-  .fbot{margin-top:70px;padding-top:24px;border-top:1px solid rgba(255,255,255,.12);display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px;font-size:13px;color:rgba(255,255,255,.45)}
+  .wordmark{font-family:var(--head);font-weight:800;font-size:clamp(64px,17vw,270px);letter-spacing:-.06em;line-height:.8;margin-top:80px;background:linear-gradient(180deg,#eef2f8 30%,rgba(238,242,248,.05));-webkit-background-clip:text;background-clip:text;color:transparent;white-space:nowrap}
+  .fbot{margin-top:30px;display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px;font-size:13px;color:var(--muted)}
+
+  @media (prefers-reduced-motion:reduce){
+    html{scroll-behavior:auto}
+    .up,.rv img,.hero h1 .ch,.hf{opacity:1!important;transform:none!important;clip-path:none!important;transition:none!important}
+    *,*::before,*::after{animation:none!important}
+    .hero-wrap{height:100vh}.ex{height:auto}.ex .pin{position:relative;height:auto;padding:100px 0}.ex .box{width:100%!important;height:auto!important;border-radius:0}.ex .box img{height:auto;aspect-ratio:16/9}.ex .over{position:relative;opacity:1;padding:40px 20px}.ex .side{display:none}
+    .hs{height:auto!important}.hs .pin{position:relative;height:auto;padding:80px 0}.track{flex-direction:column;transform:none!important}.panel{width:auto}
+  }
 </style>
 </head>
-<body>
+<body class="loading">
+<div id="loader" aria-hidden="true"><span class="lt">TRI VISION · TRANSPORT DE BAUXITE</span><span class="lc" id="lc">0</span><span class="lb" id="lb"></span></div>
+<div class="cur" id="cur" aria-hidden="true"></div><div class="cur-r" id="curR" aria-hidden="true"><span>Voir</span></div>
+<div class="float" id="float" aria-hidden="true"><img id="floatImg" alt=""></div>
 
 <header class="hdr" id="hdr">
   <div class="wrap nav">
-    <a class="logo" href="#accueil" aria-label="Tri Vision, accueil"><i aria-hidden="true"></i>Tri Vision</a>
+    <a class="logo" href="#accueil" aria-label="Tri Vision, accueil"><i aria-hidden="true"></i>TRI VISION</a>
     <ul>
-      <li><a href="#trajet">Le trajet</a></li>
+      <li><a href="#trajet">Trajet</a></li>
+      <li><a href="#itineraire">Itinéraire</a></li>
+      <li><a href="#flotte">Flotte</a></li>
       <li><a href="#engagements">Engagements</a></li>
       <li><a href="#chauffeurs">Chauffeurs</a></li>
-      <li><a href="#contact">Contact</a></li>
+      <li><a href="#faq">FAQ</a></li>
     </ul>
-    <a class="btn btn-blue" href="#contact">Demander un devis</a>
+    <a class="btn btn-blue" href="#contact">Devis <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
     <button class="burger" id="burger" aria-label="Ouvrir le menu" aria-expanded="false" aria-controls="mmenu"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 8h16M4 16h16"/></svg></button>
   </div>
 </header>
 <nav class="mmenu" id="mmenu" aria-label="Menu principal" aria-hidden="true">
-  <a href="#trajet" style="--i:0">Le trajet</a><a href="#engagements" style="--i:1">Engagements</a><a href="#chauffeurs" style="--i:2">Chauffeurs</a><a href="#contact" style="--i:3">Contact</a>
+  <a href="#trajet">Trajet</a><a href="#itineraire">Itinéraire</a><a href="#flotte">Flotte</a><a href="#engagements">Engagements</a><a href="#chauffeurs">Chauffeurs</a><a href="#faq">FAQ</a>
+  <a class="btn btn-blue" href="#contact">Demander un devis</a>
 </nav>
 
 <main>
-  <section class="hero" id="accueil" aria-label="Accueil">
-    <div class="hero-img px" id="heroImg" role="img" aria-label="Camion benne sur une piste au coucher du soleil"></div>
-    <div class="scrollcue" aria-hidden="true">Défiler</div>
-    <div class="wrap hero-in">
-      <h1><span class="ln"><span>De la mine</span></span><span class="ln"><span>au port.</span></span></h1>
-      <div class="hero-row">
-        <p class="fade f1">Tri Vision transporte votre bauxite par camions bennes, jour et nuit, avec des chauffeurs formés et un suivi de chaque rotation.</p>
-        <div class="acts fade f2">
-          <a class="btn btn-blue" href="#contact">Demander un devis <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
-          <a class="btn btn-line" href="#trajet">Découvrir</a>
+  <div class="hero-wrap" id="accueil">
+    <section class="hero" aria-label="Accueil">
+      <div class="frame" id="frame"><canvas id="scene" aria-hidden="true"></canvas></div>
+      <div class="live wrap hf"><span><b></b>Flotte en service · 24 h/24</span></div>
+      <div class="hero-txt" id="heroTxt">
+        <div class="wrap">
+          <h1 aria-label="De la mine au port."><span class="row" data-chars>De la mine</span><span class="row" data-chars data-blue>au port.</span></h1>
+          <div class="hero-bot">
+            <p class="hf">Tri Vision transporte votre bauxite par camions bennes, jour et nuit, avec des chauffeurs formés et un suivi de chaque rotation.</p>
+            <div class="acts hf">
+              <a class="btn btn-blue" href="#contact">Demander un devis <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+              <a class="btn btn-ghost" href="#trajet">Suivre le trajet</a>
+            </div>
+          </div>
         </div>
       </div>
-    </div>
-  </section>
+    </section>
+  </div>
 
-  <section class="statement" aria-label="Présentation">
+  <section class="stmt pad" aria-label="Présentation">
     <div class="wrap">
       <span class="label up">Tri Vision</span>
-      <p id="stmt">Nous prenons en charge chaque tonne de bauxite, du front de taille jusqu'au quai, pour que vos volumes arrivent au rythme prévu, en toute sécurité.</p>
+      <p id="stmt">Chaque jour, nos camions relient la mine au port. Nous prenons en charge chaque tonne de bauxite, du front de taille jusqu'au quai, pour que vos volumes arrivent au rythme prévu.</p>
     </div>
   </section>
 
-  <section id="trajet" style="padding-top:0">
-    <div class="wrap">
-      <span class="label up">Le trajet</span>
-      <h2 class="up" style="max-width:14ch;margin-bottom:clamp(40px,6vw,80px)">Une seule chaîne, trois étapes.</h2>
-
-      <article class="step">
-        <div class="media" data-r><img class="px" src="img/mine.webp" alt="Camion benne dans une mine à ciel ouvert" width="1400" height="937" loading="lazy"></div>
-        <div>
-          <div class="num up">01</div>
-          <h3 class="up">Chargement à la mine</h3>
-          <p class="lead up">Nous coordonnons le chargement avec l'exploitant pour réduire l'attente de chaque camion.</p>
-          <ul class="up"><li>Pesée de chaque benne <span>au départ</span></li><li>Planification des rotations <span>avec vous</span></li></ul>
+  <section class="hs" id="trajet" aria-label="Le trajet">
+    <div class="pin">
+      <div class="track" id="track">
+        <div class="panel intro">
+          <span class="label">Le trajet</span>
+          <h2>Trois étapes,<br><span class="outline">une seule</span><br>chaîne.</h2>
         </div>
-      </article>
-
-      <article class="step rev">
-        <div class="media tall" data-r><img class="px" src="img/piste.webp" alt="Deux camions bennes sur une piste en terre" width="933" height="1400" loading="lazy"></div>
-        <div>
-          <div class="num up">02</div>
-          <h3 class="up">Transport sur piste</h3>
-          <p class="lead up">Des camions bennes adaptés aux pistes de latérite, en saison sèche comme en saison des pluies.</p>
-          <ul class="up"><li>Suivi GPS <span>en temps réel</span></li><li>Vitesses <span>contrôlées</span></li></ul>
-        </div>
-      </article>
-
-      <article class="step">
-        <div class="media" data-r><img class="px" src="img/port.webp" alt="Chargement de minerai en vrac dans un minéralier au port" width="1400" height="933" loading="lazy"></div>
-        <div>
-          <div class="num up">03</div>
-          <h3 class="up">Livraison au port</h3>
-          <p class="lead up">Déchargement sur les stocks du port, prêts pour le chargement des minéraliers.</p>
-          <ul class="up"><li>Rapport de tonnage <span>quotidien</span></li><li>Traçabilité <span>par rotation</span></li></ul>
-        </div>
-      </article>
-
-      <div class="figs" style="margin-top:clamp(40px,6vw,80px)">
-        <div class="fig up"><b data-count="80">0</b><span>camions bennes</span></div>
-        <div class="fig up" style="--d:.08s"><b data-count="35" data-suf="t">0</b><span>par rotation</span></div>
-        <div class="fig up" style="--d:.16s"><b data-count="24" data-suf="/7">0</b><span>exploitation continue</span></div>
-        <div class="fig up" style="--d:.24s"><b data-count="98" data-suf="%">0</b><span>disponibilité visée</span></div>
+        <article class="panel">
+          <div class="ph" data-cursor><img src="img/mine.webp" alt="Camion benne dans une mine à ciel ouvert" width="1400" height="937"><span class="km">KM 0</span></div>
+          <div><span class="big outline">01</span><h3>Chargement à la mine</h3><p>Coordination avec l'exploitant pour réduire l'attente, et pesée de chaque benne avant le départ.</p></div>
+        </article>
+        <article class="panel">
+          <div class="ph" data-cursor><img src="img/piste.webp" alt="Deux camions bennes sur une piste en terre" width="933" height="1400"><span class="km">KM 21</span></div>
+          <div><span class="big outline">02</span><h3>Transport sur piste</h3><p>Camions adaptés à la latérite, suivis par GPS, en saison sèche comme en saison des pluies.</p></div>
+        </article>
+        <article class="panel">
+          <div class="ph" data-cursor><img src="img/port.webp" alt="Chargement de minerai en vrac dans un minéralier" width="1400" height="933"><span class="km">KM 42</span></div>
+          <div><span class="big outline">03</span><h3>Livraison au port</h3><p>Déchargement sur les stocks du quai, prêts pour les minéraliers, avec rapport de tonnage quotidien.</p></div>
+        </article>
       </div>
-      <p class="figs-note">Chiffres d'exemple, à remplacer par ceux de Tri Vision.</p>
+      <div class="hs-bar" aria-hidden="true"><i id="hsBar"></i></div>
     </div>
   </section>
 
-  <section id="engagements" style="padding-top:0">
-    <div class="wrap commit">
-      <div class="stick"><div class="media" data-r><img class="px" src="img/aerial.webp" alt="Vue aérienne d'engins dans une carrière de terre rouge" width="1400" height="933" loading="lazy"></div></div>
+  <section class="ex" id="chiffres" aria-label="Chiffres clés">
+    <div class="pin">
+      <span class="side s1" aria-hidden="true">Jour</span><span class="side s2 outline" aria-hidden="true">& nuit</span>
+      <div class="box" id="exBox"><img src="img/aerial.webp" alt="Vue aérienne d'engins dans une exploitation de terre rouge" width="1400" height="933"></div>
+      <div class="over" id="exOver">
+        <div class="wrap" style="width:100%">
+          <h2>Une flotte qui<br><span class="blue">ne s'arrête pas.</span></h2>
+          <div class="figs">
+            <div><b data-count="80">0</b><span>camions bennes</span></div>
+            <div><b data-count="35" data-suf="t">0</b><span>par rotation</span></div>
+            <div><b data-count="24" data-suf="/7">0</b><span>exploitation</span></div>
+            <div><b data-count="98" data-suf="%">0</b><span>disponibilité visée</span></div>
+          </div>
+          <p class="smallnote" style="color:rgba(238,242,248,.6)">Chiffres d'exemple, à remplacer par ceux de Tri Vision.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="pad" id="itineraire">
+    <div class="wrap mapgrid">
       <div>
-        <span class="label up">Nos engagements</span>
-        <h2 class="up">Ce qui ne se négocie pas.</h2>
-        <ul class="clist">
-          <li class="citem up"><span class="n">01</span><h3>Sécurité</h3><p>Chauffeurs formés à la conduite défensive, vitesses limitées et contrôlées sur toute la piste.</p></li>
-          <li class="citem up"><span class="n">02</span><h3>Fiabilité</h3><p>Rotations planifiées avec vous et tenues, tonnage pesé et tracé à chaque départ.</p></li>
-          <li class="citem up"><span class="n">03</span><h3>Disponibilité</h3><p>Exploitation 24 h/24 et 7 j/7, avec une flotte entretenue dans notre atelier.</p></li>
-          <li class="citem up"><span class="n">04</span><h3>Transparence</h3><p>Un interlocuteur unique pour votre site et un rapport de tonnage chaque jour.</p></li>
-        </ul>
+        <span class="label up">Itinéraire</span>
+        <h2 class="up" style="font-size:clamp(40px,5.5vw,80px)">42 km,<br><span class="outline">suivis en direct.</span></h2>
+        <p class="lead up" style="margin-top:24px">Chaque camion est localisé du chargement au déchargement. Vous savez où sont vos volumes, sans avoir à appeler.</p>
+        <div class="legend up">
+          <div><b>42 km</b><span>Mine → port</span></div>
+          <div><b>~1 h 10</b><span>par trajet</span></div>
+          <div><b>GPS</b><span>chaque camion</span></div>
+        </div>
+        <p class="smallnote">Distances et durées d'exemple.</p>
+      </div>
+      <div class="map up" id="map">
+        <svg viewBox="0 0 1000 620" aria-label="Carte schématique du trajet de la mine au port" role="img">
+          <defs><pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse"><path d="M40 0H0V40" fill="none" stroke="rgba(255,255,255,.05)"/></pattern>
+          <linearGradient id="sea" x1="0" x2="1"><stop offset="0" stop-color="#14305e"/><stop offset="1" stop-color="#0f2448"/></linearGradient></defs>
+          <rect width="1000" height="620" fill="url(#grid)"/>
+          <path d="M820 0 C 760 140, 860 230, 800 330 S 900 520, 860 620 L1000 620 L1000 0Z" fill="url(#sea)"/>
+          <g fill="none" stroke="rgba(255,255,255,.08)" stroke-width="1.5"><path d="M0 120 C 200 160, 400 60, 700 110"/><path d="M0 470 C 260 430, 420 560, 760 500"/><path d="M300 0 C 320 200, 260 400, 330 620"/></g>
+          <path d="M140 470 C 230 470, 250 380, 340 360 S 470 400, 540 320 S 650 200, 770 190" fill="none" stroke="rgba(255,255,255,.12)" stroke-width="16" stroke-linecap="round"/>
+          <path id="route" d="M140 470 C 230 470, 250 380, 340 360 S 470 400, 540 320 S 650 200, 770 190" fill="none" stroke="#2f6bff" stroke-width="5" stroke-linecap="round"/>
+          <circle cx="140" cy="470" r="18" fill="#ff8a4c" opacity=".25"/><circle cx="140" cy="470" r="9" fill="#ff8a4c"/>
+          <rect x="758" y="178" width="24" height="24" rx="5" fill="#fff"/>
+          <g id="kms" font-family="Inter,sans-serif" font-size="15" font-weight="600" fill="#eef2f8"></g>
+          <text x="112" y="520" font-family="Inter Tight,sans-serif" font-weight="800" font-size="22" fill="#eef2f8">MINE</text>
+          <text x="700" y="160" font-family="Inter Tight,sans-serif" font-weight="800" font-size="22" fill="#eef2f8">PORT</text>
+          <g id="truckDot"><circle r="22" fill="#2f6bff" opacity=".25"/><circle r="11" fill="#2f6bff" stroke="#fff" stroke-width="3"/></g>
+        </svg>
       </div>
     </div>
   </section>
 
-  <section style="padding-top:0" aria-label="Sur le terrain">
+  <section class="pad" id="flotte" style="padding-top:0">
     <div class="wrap">
-      <span class="label up">Sur le terrain</span>
-      <h2 class="up" style="max-width:16ch">Là où se fait le travail.</h2>
-      <div class="gal">
-        <div class="media g1" data-r><img class="px" src="img/quarry.webp" alt="Chargeuse et pelle dans une carrière" width="1400" height="788" loading="lazy"><span class="cap">Front de taille</span></div>
-        <div class="media g2" data-r style="--d:.15s"><img class="px" src="img/aerial2.webp" alt="Vue aérienne d'une exploitation à ciel ouvert" width="1400" height="1050" loading="lazy"><span class="cap">Zone de stockage</span></div>
-        <div class="media g3" data-r><img class="px" src="img/curve.webp" alt="Camion benne chargé sur une piste en courbe" width="1400" height="933" loading="lazy"><span class="cap">Sur la piste</span></div>
-        <div class="media g4" data-r style="--d:.15s"><img class="px" src="img/hero.webp" alt="Camion benne au coucher du soleil" width="2000" height="1665" style="object-position:30% 60%"><span class="cap">Fin de rotation</span></div>
+      <span class="label up">Notre flotte</span>
+      <h2 class="up">Équipée pour<br><span class="outline">la latérite.</span></h2>
+      <div class="cards">
+        <article class="card up" data-tilt><img src="img/curve.webp" alt="Camion benne chargé sur une piste" width="1400" height="933"><span class="tag">Camions bennes</span><b>35 t</b><h3>Bennes 6x4</h3><p>Robustes sur piste, en saison sèche comme en saison des pluies.</p></article>
+        <article class="card up" data-tilt style="--d:.1s"><img src="img/radio.webp" alt="Chauffeur en communication radio au volant" width="1400" height="933"><span class="tag">Liaison</span><b>24/7</b><h3>GPS et radio</h3><p>Chaque chauffeur reste joignable, chaque camion localisé.</p></article>
+        <article class="card up" data-tilt style="--d:.2s"><img src="img/quarry.webp" alt="Engins dans une carrière" width="1400" height="788"><span class="tag">Atelier</span><b>100 %</b><h3>Inspection au départ</h3><p>Maintenance préventive et contrôle avant chaque rotation.</p></article>
       </div>
     </div>
   </section>
 
-  <section id="chauffeurs" style="padding-top:0">
-    <div class="wrap drivers">
-      <div class="pair">
-        <div class="media m1" data-r><img class="px" src="img/driver.webp" alt="Chauffeur souriant à la fenêtre de son camion" width="1400" height="1051" loading="lazy"></div>
-        <div class="media m2" data-r style="--d:.3s"><img src="img/radio.webp" alt="Chauffeur en communication radio au volant" width="1400" height="933" loading="lazy"></div>
+  <div class="mq" aria-hidden="true"><div class="t" id="mq"><span>Mine</span><i>◆</i><span>Piste</span><i>◆</i><span>Port</span><i>◆</i><span>Mine</span><i>◆</i><span>Piste</span><i>◆</i><span>Port</span><i>◆</i><span>Mine</span><i>◆</i><span>Piste</span><i>◆</i><span>Port</span><i>◆</i></div></div>
+
+  <section class="pad" id="engagements">
+    <div class="wrap">
+      <span class="label up">Nos engagements</span>
+      <h2 class="up">Ce qui ne<br><span class="outline">se négocie pas.</span></h2>
+      <ul class="elist">
+        <li class="erow up" data-img="img/driver.webp"><span class="n">01</span><h3>Sécurité</h3><p>Chauffeurs formés à la conduite défensive, vitesses limitées et contrôlées sur toute la piste.</p></li>
+        <li class="erow up" data-img="img/mine.webp"><span class="n">02</span><h3>Fiabilité</h3><p>Rotations planifiées avec vous et tenues, tonnage pesé et tracé à chaque départ.</p></li>
+        <li class="erow up" data-img="img/aerial2.webp"><span class="n">03</span><h3>Disponibilité</h3><p>Exploitation 24 h/24, 7 j/7, avec une flotte entretenue dans notre atelier.</p></li>
+        <li class="erow up" data-img="img/port.webp"><span class="n">04</span><h3>Transparence</h3><p>Un interlocuteur unique pour votre site et un rapport de tonnage chaque jour.</p></li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="pad" id="chauffeurs" style="padding-top:0">
+    <div class="wrap drv">
+      <div class="pics">
+        <div class="rv p1" data-cursor><img src="img/driver.webp" alt="Chauffeur souriant à la fenêtre de son camion" width="1400" height="1051"></div>
+        <div class="rv p2" style="--d:.3s"><img src="img/radio.webp" alt="" width="1400" height="933"></div>
       </div>
       <div>
         <span class="label up">Chauffeurs</span>
-        <h2 class="up">Prenez le volant avec nous.</h2>
-        <p class="lead up" style="margin-top:18px">Nous recrutons des chauffeurs poids lourd expérimentés et les formons à nos standards de sécurité.</p>
+        <h2 class="up" style="font-size:clamp(42px,6vw,88px)">Prenez<br>le volant.</h2>
+        <p class="lead up" style="margin-top:22px">Nous recrutons des chauffeurs poids lourd expérimentés et les formons à nos standards de sécurité.</p>
         <ul class="perks up">
-          <li>Salaire fixe et primes de performance</li>
-          <li>Formation conduite défensive et premiers secours</li>
-          <li>Camions entretenus, inspectés avant chaque départ</li>
-          <li>Assistance joignable 24 h/24 sur la route</li>
+          <li><b>Salaire + primes</b><span>Performance et sécurité</span></li>
+          <li><b>Formation</b><span>Défensive, premiers secours</span></li>
+          <li><b>Camions entretenus</b><span>Inspectés chaque jour</span></li>
+          <li><b>Assistance 24/7</b><span>Toujours joignable</span></li>
         </ul>
-        <a class="btn btn-dark up" href="#contact" data-subject="Candidature chauffeur">Postuler <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+        <a class="btn btn-blue up" href="#contact" data-subject="Candidature chauffeur">Postuler <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
       </div>
     </div>
   </section>
 
-  <section id="contact" style="padding-top:0">
-    <div class="wrap contact">
+  <section class="pad" id="faq" style="padding-top:0">
+    <div class="wrap faq">
+      <div>
+        <span class="label up">Questions fréquentes</span>
+        <h2 class="up" style="font-size:clamp(40px,5.5vw,80px)">Vous vous<br><span class="outline">demandez…</span></h2>
+      </div>
+      <div class="up">
+        <details><summary>Quels volumes pouvez-vous transporter ?<span class="pm"></span></summary><p class="a">Nous dimensionnons la flotte selon votre production : du transport ponctuel jusqu'aux contrats de plusieurs milliers de tonnes par mois.</p></details>
+        <details><summary>Comment suivre mes rotations ?<span class="pm"></span></summary><p class="a">Chaque camion est équipé d'un GPS. Vous recevez un rapport de tonnage quotidien et un interlocuteur dédié répond à vos questions.</p></details>
+        <details><summary>Travaillez-vous pendant la saison des pluies ?<span class="pm"></span></summary><p class="a">Oui. Nos camions et nos chauffeurs sont préparés aux pistes de latérite toute l'année, avec des consignes de vitesse adaptées.</p></details>
+        <details><summary>Quels types de contrats proposez-vous ?<span class="pm"></span></summary><p class="a">Tarification à la tonne ou forfait mensuel, pour des contrats de longue durée comme pour des besoins ponctuels.</p></details>
+        <details><summary>Sous quel délai pouvez-vous démarrer ?<span class="pm"></span></summary><p class="a">Après un premier échange sur vos volumes et votre trajet, nous vous proposons un planning de démarrage.</p></details>
+      </div>
+    </div>
+  </section>
+
+  <section class="pad" id="contact" style="padding-top:0">
+    <div class="wrap ct">
       <div>
         <span class="label up">Contact</span>
-        <h2 class="up">Parlons de vos volumes.</h2>
-        <p class="lead up" style="margin-top:18px">Indiquez le site de chargement, la destination et vos tonnages : nous revenons vers vous sous 24 h.</p>
+        <h2 class="up">Parlons<br><span class="blue">volumes.</span></h2>
         <div class="cinfo up">
           <div><small>Téléphone / WhatsApp</small><strong>+000 00 00 00 00</strong></div>
           <div><small>E-mail</small><strong>contact@votredomaine.com</strong></div>
@@ -349,8 +468,8 @@
         </div>
         <div class="fld"><label for="c-phone">Téléphone</label><input id="c-phone" type="tel" autocomplete="tel"></div>
         <div class="fld"><label for="c-msg">Message</label><textarea id="c-msg"></textarea></div>
-        <button class="btn btn-blue" type="submit">Envoyer la demande <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
-        <p class="note" id="cnote" role="status">Votre demande est transmise à l'équipe Tri Vision.</p>
+        <button class="btn btn-blue" type="submit">Envoyer la demande <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+        <p class="note" id="cnote" role="status">Réponse sous 24 h.</p>
       </form>
     </div>
   </section>
@@ -358,11 +477,12 @@
 
 <footer>
   <div class="wrap">
-    <div class="fwrap">
-      <p class="big">Votre bauxite, de la mine au port.</p>
-      <div><h4>Navigation</h4><ul><li><a href="#trajet">Le trajet</a></li><li><a href="#engagements">Engagements</a></li><li><a href="#chauffeurs">Chauffeurs</a></li><li><a href="#contact">Contact</a></li></ul></div>
+    <div class="fgrid">
+      <p class="lead">Transport de bauxite par camions bennes, de la mine au port.</p>
+      <div><h4>Navigation</h4><ul><li><a href="#trajet">Trajet</a></li><li><a href="#flotte">Flotte</a></li><li><a href="#engagements">Engagements</a></li><li><a href="#chauffeurs">Chauffeurs</a></li></ul></div>
       <div><h4>Contact</h4><ul><li>+000 00 00 00 00</li><li>contact@votredomaine.com</li><li>Adresse du siège</li></ul></div>
     </div>
+    <div class="wordmark" aria-hidden="true">TRI VISION</div>
     <div class="fbot"><span>© 2026 Tri Vision. Tous droits réservés.</span><span>Démonstration : coordonnées et chiffres d'exemple</span></div>
   </div>
 </footer>
@@ -370,48 +490,542 @@
 <script>
 (function(){
   const reduce=matchMedia('(prefers-reduced-motion:reduce)').matches;
-  const hdr=document.getElementById('hdr'),hero=document.getElementById('accueil'),heroImg=document.getElementById('heroImg');
-  requestAnimationFrame(()=>hero.classList.add('go'));
+  const fine=matchMedia('(pointer:fine)').matches;
+  const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+  const clamp=(v,a,b)=>Math.min(b,Math.max(a,v));
+  const ease=t=>1-Math.pow(1-t,3);
+
+  // split hero letters
+  let ci=0;
+  $$('[data-chars]').forEach(r=>{const blue=r.hasAttribute('data-blue');r.innerHTML=[...r.textContent].map(c=>c===' '?' ':'<span class="ch'+(blue?' blue':'')+'" style="--i:'+(ci++)+'">'+c+'</span>').join('');});
+
+  // loader
+  const loader=$('#loader'),lc=$('#lc'),lb=$('#lb');
+  const t0=performance.now(),dur=reduce?200:1700;
+  (function tick(n){const k=clamp((n-t0)/dur,0,1),v=Math.round(ease(k)*100);lc.textContent=v;lb.style.width=v+'%';
+    if(k<1)requestAnimationFrame(tick);else{loader.classList.add('done');document.body.classList.remove('loading');setTimeout(()=>{document.body.classList.add('go');},250);setTimeout(()=>loader.remove(),1400);}})(t0);
 
   // menu
-  const bg=document.getElementById('burger'),mm=document.getElementById('mmenu');
-  function setM(o){mm.classList.toggle('open',o);document.body.classList.toggle('menu-open',o);bg.setAttribute('aria-expanded',o);mm.setAttribute('aria-hidden',!o);bg.setAttribute('aria-label',o?'Fermer le menu':'Ouvrir le menu');document.body.style.overflow=o?'hidden':'';}
+  const bg=$('#burger'),mm=$('#mmenu');
+  function setM(o){mm.classList.toggle('open',o);bg.setAttribute('aria-expanded',o);mm.setAttribute('aria-hidden',!o);bg.setAttribute('aria-label',o?'Fermer le menu':'Ouvrir le menu');document.body.style.overflow=o?'hidden':'';}
   bg.addEventListener('click',()=>setM(!mm.classList.contains('open')));
   mm.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>setM(false)));
   addEventListener('keydown',e=>{if(e.key==='Escape'&&mm.classList.contains('open')){setM(false);bg.focus();}});
 
   // statement words
-  const st=document.getElementById('stmt');
-  st.innerHTML=st.textContent.split(' ').map(w=>'<span class="w">'+w+'</span> ').join('');
-  const words=[...st.querySelectorAll('.w')];
+  const st=$('#stmt'),hl=['bauxite,','mine','port.','quai,','tonne'];
+  st.innerHTML=st.textContent.split(' ').map(w=>'<span class="w'+(hl.includes(w)?' hl':'')+'">'+w+'</span> ').join('');
+  const words=$$('#stmt .w');
 
-  // scroll-linked effects
-  const pxEls=[...document.querySelectorAll('.media .px')];
-  let ticking=false;
-  function frame(){
+  // elements
+  const hdr=$('#hdr'),heroWrap=$('#accueil'),frame=$('#frame'),heroTxt=$('#heroTxt');
+  const hs=$('#trajet'),track=$('#track'),hsBar=$('#hsBar'),panelImgs=$$('.panel .ph img');
+  const ex=$('#chiffres'),exBox=$('#exBox'),exOver=$('#exOver'),exImg=exBox.querySelector('img');
+  const route=$('#route'),truckDot=$('#truckDot'),map=$('#map'),kms=$('#kms');
+  const mq=$('#mq');
+  const rl=route.getTotalLength();
+  route.style.strokeDasharray=rl;route.style.strokeDashoffset=rl;
+  [0,14,28,42].forEach((k,i)=>{const p=route.getPointAtLength(rl*i/3);const g=document.createElementNS('http://www.w3.org/2000/svg','g');g.innerHTML='<rect x="'+(p.x-24)+'" y="'+(p.y-44)+'" width="48" height="24" rx="12" fill="rgba(7,11,20,.85)" stroke="rgba(255,255,255,.2)"/><text x="'+p.x+'" y="'+(p.y-27)+'" text-anchor="middle">'+k+' km</text>';kms.appendChild(g);});
+
+  function sizeHs(){if(reduce){hs.style.height='auto';return;}hs.style.height=(track.scrollWidth-innerWidth+innerHeight)+'px';}
+  sizeHs();addEventListener('resize',sizeHs);addEventListener('load',sizeHs);
+
+  let lastY=scrollY,mqX=0,mqV=0,ticking=false,countedEx=false;
+  function count(el){const t=+el.dataset.count,s=el.dataset.suf?'<small>'+el.dataset.suf+'</small>':'';if(reduce){el.innerHTML=t+s;return;}const s0=performance.now();(function f(n){const k=clamp((n-s0)/1800,0,1);el.innerHTML=Math.round(t*ease(k))+s;if(k<1)requestAnimationFrame(f);})(s0);}
+
+  function frameUpdate(){
     ticking=false;
-    const y=scrollY,h=innerHeight;
-    hdr.classList.toggle('solid',y>h*0.85);
+    const y=scrollY,h=innerHeight,w=innerWidth,dy=y-lastY;lastY=y;
+    hdr.classList.toggle('solid',y>40);
+    hdr.classList.toggle('hide',dy>4&&y>h&&!mm.classList.contains('open'));
+    if(dy<-4)hdr.classList.remove('hide');
     if(!reduce){
-      if(y<h*1.2)heroImg.style.transform='translate3d(0,'+(y*0.25)+'px,0)';
-      pxEls.forEach(img=>{const r=img.parentElement.getBoundingClientRect();if(r.bottom<0||r.top>h)return;const p=(r.top+r.height/2-h/2)/h;img.style.translate='0 '+(p*-6)+'%';});
-    }
-    const r=st.getBoundingClientRect();
-    const prog=reduce?1:Math.min(1,Math.max(0,(h*0.85-r.top)/(r.height+h*0.35)));
-    const n=Math.round(prog*words.length);
-    words.forEach((w,i)=>w.classList.toggle('on',i<n));
+      // hero shrink
+      const hp=clamp(y/(heroWrap.offsetHeight-h),0,1),e=ease(hp);
+      frame.style.clipPath='inset('+(e*7)+'% '+(e*4)+'% '+(e*7)+'% '+(e*4)+'% round '+(e*28)+'px)';
+      heroTxt.style.transform='translate3d(0,'+(-hp*120)+'px,0)';heroTxt.style.opacity=1-hp*1.6;
+      // horizontal journey
+      const r=hs.getBoundingClientRect(),hp2=clamp(-r.top/(r.height-h),0,1);
+      const maxX=track.scrollWidth-w;track.style.transform='translate3d('+(-hp2*maxX)+'px,0,0)';hsBar.style.transform='scaleX('+hp2+')';
+      panelImgs.forEach(img=>{const b=img.parentElement.getBoundingClientRect();const c=(b.left+b.width/2-w/2)/w;img.style.transform='scale(1.15) translateX('+(c*-6)+'%)';});
+      // expanding image
+      const er=ex.getBoundingClientRect(),ep=clamp(-er.top/(er.height-h),0,1),ee=ease(clamp(ep/0.6,0,1));
+      exBox.style.width=(42+58*ee)+'vw';exBox.style.height=(52+48*ee)+'vh';exBox.style.borderRadius=(24*(1-ee))+'px';
+      exImg.style.transform='scale('+(1.25-0.25*ee)+')';
+      const o=clamp((ep-0.5)/0.25,0,1);exBox.style.setProperty('--o',o);exOver.style.setProperty('--o',o);ex.style.setProperty('--s',1-ee);
+      $$('.ex .side').forEach(s=>s.style.opacity=1-ee);
+      if(o>0.6&&!countedEx){countedEx=true;exOver.querySelectorAll('[data-count]').forEach(count);}
+      // marquee velocity
+      mqV+=dy*0.6;
+    }else if(!countedEx){countedEx=true;exOver.querySelectorAll('[data-count]').forEach(count);}
+    // map route
+    const mr=map.getBoundingClientRect(),mp=reduce?1:clamp((h*0.85-mr.top)/(mr.height+h*0.3),0,1);
+    route.style.strokeDashoffset=rl*(1-mp);
+    const pt=route.getPointAtLength(rl*mp);truckDot.setAttribute('transform','translate('+pt.x+' '+pt.y+')');
+    // statement
+    const sr=st.getBoundingClientRect(),sp=reduce?1:clamp((h*0.85-sr.top)/(sr.height+h*0.3),0,1),n=Math.round(sp*words.length);
+    words.forEach((wd,i)=>wd.classList.toggle('on',i<n));
+    // active nav
+    let act=null;$$('.nav ul a').forEach(a=>{const el=$(a.getAttribute('href'));if(el&&el.getBoundingClientRect().top<h*0.5)act=a;});
+    $$('.nav ul a').forEach(a=>a.classList.toggle('active',a===act));
   }
-  addEventListener('scroll',()=>{if(!ticking){ticking=true;requestAnimationFrame(frame);}},{passive:true});
-  addEventListener('resize',frame);frame();
+  addEventListener('scroll',()=>{if(!ticking){ticking=true;requestAnimationFrame(frameUpdate);}},{passive:true});
+  addEventListener('resize',frameUpdate);frameUpdate();
 
-  // reveals + counters
-  function count(el){const t=+el.dataset.count,s=el.dataset.suf?'<small>'+el.dataset.suf+'</small>':'';if(reduce){el.innerHTML=t+s;return;}const t0=performance.now();(function f(n){const k=Math.min(1,(n-t0)/1800),e=1-Math.pow(1-k,4);el.innerHTML=Math.round(t*e)+s;if(k<1)requestAnimationFrame(f);})(t0);}
-  const io=new IntersectionObserver(es=>es.forEach(e=>{if(!e.isIntersecting)return;e.target.classList.add('in');e.target.querySelectorAll('[data-count]').forEach(count);io.unobserve(e.target);}),{threshold:.2,rootMargin:'0px 0px -8% 0px'});
-  document.querySelectorAll('.up,.media').forEach(el=>io.observe(el));
+  // marquee loop
+  if(!reduce)(function loop(){mqV*=0.92;mqX-=0.6+Math.abs(mqV)*0.05;const half=mq.scrollWidth/2;if(-mqX>half)mqX+=half;mq.style.transform='translate3d('+mqX+'px,0,0)';requestAnimationFrame(loop);})();
+
+  // reveals
+  const io=new IntersectionObserver(es=>es.forEach(e=>{if(!e.isIntersecting)return;e.target.classList.add('in');io.unobserve(e.target);}),{threshold:.15,rootMargin:'0px 0px -6% 0px'});
+  $$('.up,.rv').forEach(el=>io.observe(el));
+
+  // cursor
+  if(fine&&!reduce){
+    const c=$('#cur'),cr=$('#curR');let mx=innerWidth/2,my=innerHeight/2,rx=mx,ry=my;
+    addEventListener('pointermove',e=>{mx=e.clientX;my=e.clientY;c.style.transform='translate('+mx+'px,'+my+'px) translate(-50%,-50%)';},{passive:true});
+    (function l(){rx+=(mx-rx)*0.16;ry+=(my-ry)*0.16;cr.style.transform='translate('+rx+'px,'+ry+'px) translate(-50%,-50%)';requestAnimationFrame(l);})();
+    $$('[data-cursor]').forEach(el=>{el.addEventListener('pointerenter',()=>cr.classList.add('big'));el.addEventListener('pointerleave',()=>cr.classList.remove('big'));});
+    // floating images on engagements
+    const fl=$('#float'),fi=$('#floatImg');let fx=0,fy=0,tx=0,ty=0,on=false;
+    $$('.erow').forEach(r=>{r.addEventListener('pointerenter',()=>{fi.src=r.dataset.img;fl.classList.add('on');on=true;});r.addEventListener('pointerleave',()=>{fl.classList.remove('on');on=false;});});
+    addEventListener('pointermove',e=>{tx=e.clientX;ty=e.clientY;},{passive:true});
+    (function l(){fx+=(tx-fx)*0.12;fy+=(ty-fy)*0.12;fl.style.left=fx+'px';fl.style.top=fy+'px';requestAnimationFrame(l);})();
+    // tilt cards
+    $$('[data-tilt]').forEach(cd=>{cd.addEventListener('pointermove',e=>{const b=cd.getBoundingClientRect(),x=(e.clientX-b.left)/b.width-.5,y=(e.clientY-b.top)/b.height-.5;cd.style.transform='perspective(900px) rotateY('+(x*8)+'deg) rotateX('+(-y*8)+'deg)';});cd.addEventListener('pointerleave',()=>cd.style.transform='');});
+  }
 
   // form
-  document.querySelectorAll('[data-subject]').forEach(a=>a.addEventListener('click',()=>{document.getElementById('c-msg').value=a.dataset.subject+' : ';}));
-  document.getElementById('cf').addEventListener('submit',e=>{e.preventDefault();const n=document.getElementById('cnote');n.className='note ok';n.textContent="Démonstration : le formulaire sera relié à l'adresse e-mail de Tri Vision lors de la mise en ligne.";});
+  $$('[data-subject]').forEach(a=>a.addEventListener('click',()=>{$('#c-msg').value=a.dataset.subject+' : ';}));
+  $('#cf').addEventListener('submit',e=>{e.preventDefault();const n=$('#cnote');n.className='note ok';n.textContent="Démonstration : le formulaire sera relié à l'adresse e-mail de Tri Vision lors de la mise en ligne.";});
+})();
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+(function(){
+  const frameEl=document.getElementById('frame'),wrapEl=document.getElementById('accueil');
+  if(!window.THREE){frameEl.classList.add('no3d');return;}
+  let renderer;
+  try{
+    renderer=new THREE.WebGLRenderer({canvas:document.getElementById('scene'),antialias:true,powerPreference:'high-performance'});
+  }catch(e){document.body.classList.add('no3d');window.__3dfail=true;return;}
+
+  const mobile=matchMedia('(pointer:coarse)').matches;
+  renderer.setPixelRatio(Math.min(devicePixelRatio||1,mobile?1.75:2));
+  renderer.shadowMap.enabled=true;
+  renderer.shadowMap.type=THREE.PCFSoftShadowMap;
+  renderer.outputEncoding=THREE.sRGBEncoding;
+  renderer.toneMapping=THREE.ACESFilmicToneMapping;
+  renderer.toneMappingExposure=1.0;
+
+  const C=h=>new THREE.Color(h).convertSRGBToLinear();
+  const HORIZON=0xf09a68, ZENITH=0x1b2c4f;
+  const scene=new THREE.Scene();
+  scene.background=C(HORIZON);
+  scene.fog=new THREE.FogExp2(C(0xd98a63),0.015);
+  const camera=new THREE.PerspectiveCamera(48,1,0.1,500);
+
+  scene.add(new THREE.HemisphereLight(C(0x8fa6cf),C(0x6a2e1a),0.62));
+  const sun=new THREE.DirectionalLight(C(0xffb57e),2.5);
+  sun.castShadow=true;
+  sun.shadow.mapSize.set(mobile?1536:2048,mobile?1536:2048);
+  Object.assign(sun.shadow.camera,{left:-40,right:40,top:40,bottom:-40,near:1,far:170});
+  sun.shadow.bias=-0.0005;sun.shadow.normalBias=0.02;
+  scene.add(sun,sun.target);
+
+  // ---------- noise ----------
+  const smooth=(a,b,x)=>{const t=Math.min(1,Math.max(0,(x-a)/(b-a)));return t*t*(3-2*t);};
+  function hash(x,y){const h=Math.sin(x*127.1+y*311.7)*43758.5453;return h-Math.floor(h);}
+  function vnoise(x,y){const xi=Math.floor(x),yi=Math.floor(y),xf=x-xi,yf=y-yi,u=xf*xf*(3-2*xf),v=yf*yf*(3-2*yf);
+    const a=hash(xi,yi),b=hash(xi+1,yi),c=hash(xi,yi+1),d=hash(xi+1,yi+1);return a+(b-a)*u+(c-a)*v+(a-b-c+d)*u*v;}
+  function fbm(x,y,o){o=o||5;let s=0,a=0.5,f=1;for(let i=0;i<o;i++){s+=a*vnoise(x*f,y*f);f*=2.03;a*=0.5;}return s;}
+  const rnd=Math.random;
+  const UP=new THREE.Vector3(0,1,0);
+
+  // ---------- procedural textures (no downloads) ----------
+  function grainTexture(size,base,spread,pebbles){
+    const c=document.createElement('canvas');c.width=c.height=size;const x=c.getContext('2d');
+    const img=x.createImageData(size,size),d=img.data;
+    for(let i=0;i<size*size;i++){
+      const px=i%size,py=(i/size)|0;
+      const n=0.55*rnd()+0.45*fbm(px*0.06,py*0.06,3);
+      const v=base+(n-0.5)*spread;
+      d[i*4]=v;d[i*4+1]=v*0.97;d[i*4+2]=v*0.94;d[i*4+3]=255;
+    }
+    x.putImageData(img,0,0);
+    for(let i=0;i<pebbles;i++){
+      const r=0.6+rnd()*1.8;x.fillStyle=rnd()<0.5?'rgba(60,30,20,.35)':'rgba(255,240,220,.25)';
+      x.beginPath();x.arc(rnd()*size,rnd()*size,r,0,6.283);x.fill();
+    }
+    const t=new THREE.CanvasTexture(c);t.wrapS=t.wrapT=THREE.RepeatWrapping;t.encoding=THREE.sRGBEncoding;
+    t.anisotropy=Math.min(8,renderer.capabilities.getMaxAnisotropy());
+    return t;
+  }
+  const grain=grainTexture(256,225,70,500);
+  grain.repeat.set(55,55);
+  const grainSmall=grainTexture(128,225,60,120);
+
+  function roadTexture(){
+    const W=256,H=512,c=document.createElement('canvas');c.width=W;c.height=H;const x=c.getContext('2d');
+    const img=x.createImageData(W,H),d=img.data;
+    const tracks=[0.18,0.36,0.64,0.82];
+    for(let py=0;py<H;py++)for(let px=0;px<W;px++){
+      const u=px/W,i=(py*W+px)*4;
+      let v=0.92+(rnd()-0.5)*0.16+(fbm(px*0.05,py*0.02,3)-0.5)*0.18;
+      let tr=0;tracks.forEach(t=>{tr=Math.max(tr,1-smooth(0.012,0.05,Math.abs(u-t)));});
+      v-=tr*(0.16+0.08*vnoise(px*0.4,py*0.03));
+      // fine longitudinal streaks in the tracks
+      v-=tr*0.05*Math.sin(px*2.3+vnoise(px,py*0.05)*3);
+      const edge=Math.min(u,1-u);
+      const a=smooth(0.0,0.16+0.05*vnoise(py*0.05,1),edge);
+      d[i]=196*v;d[i+1]=128*v;d[i+2]=86*v;d[i+3]=255*a;
+    }
+    x.putImageData(img,0,0);
+    const t=new THREE.CanvasTexture(c);t.wrapS=THREE.ClampToEdgeWrapping;t.wrapT=THREE.RepeatWrapping;t.encoding=THREE.sRGBEncoding;
+    t.anisotropy=Math.min(8,renderer.capabilities.getMaxAnisotropy());
+    return t;
+  }
+
+  // ---------- sky dome ----------
+  {
+    const g=new THREE.SphereGeometry(420,32,16),p=g.attributes.position,col=new Float32Array(p.count*3),h=C(HORIZON),z=C(ZENITH),t=new THREE.Color();
+    for(let i=0;i<p.count;i++){const k=Math.max(0,p.getY(i)/420);t.copy(h).lerp(z,Math.pow(k,0.55));col[i*3]=t.r;col[i*3+1]=t.g;col[i*3+2]=t.b;}
+    g.setAttribute('color',new THREE.BufferAttribute(col,3));
+    var sky=new THREE.Mesh(g,new THREE.MeshBasicMaterial({vertexColors:true,side:THREE.BackSide,fog:false,depthWrite:false}));
+    sky.renderOrder=-1;scene.add(sky);
+  }
+
+  // ---------- road path ----------
+  const pts=[[-62,-38],[-45,-30],[-30,-36],[-12,-20],[-8,0],[-20,14],[-6,28],[14,26],[28,10],[44,16],[52,34],[60,46]]
+    .map(p=>new THREE.Vector3(p[0],0,p[1]));
+  const curve=new THREE.CatmullRomCurve3(pts,false,'catmullrom',0.5);
+  const LEN=curve.getLength();
+  const S2=curve.getSpacedPoints(400).map(v=>[v.x,v.z]);
+  function roadDist(x,z){let m=1e9;for(let i=0;i<S2.length;i++){const dx=x-S2[i][0],dz=z-S2[i][1],d=dx*dx+dz*dz;if(d<m)m=d;}return Math.sqrt(m);}
+
+  const PIT={x:-80,z:-54,r:21};
+  function terrain(x,z,d){
+    let n=(fbm(x*0.016,z*0.016)-0.38)*15+(fbm(x*0.08+20,z*0.08-7,3)-0.5)*1.4;
+    let h=n*smooth(6.5,19,d)+(fbm(x*0.3,z*0.3,2)-0.5)*0.25*smooth(5.5,8,d);
+    const pr=Math.hypot(x-PIT.x,z-PIT.z);
+    if(pr<PIT.r){const s=(PIT.r-pr)/3.3;h=Math.min(h,-(Math.floor(s)+smooth(0.72,1,s%1))*1.5);}
+    const sea=smooth(106,116,x+z);
+    return h*(1-sea)-3.5*sea;
+  }
+  const grassiness=(x,z)=>smooth(0.42,0.68,fbm(x*0.028+50,z*0.028-30,4));
+
+  // ---------- ground ----------
+  const SEG=mobile?130:150;
+  const gGeo=new THREE.PlaneGeometry(280,280,SEG,SEG);
+  gGeo.rotateX(-Math.PI/2);
+  const gp=gGeo.attributes.position,cols=new Float32Array(gp.count*3);
+  const cRedA=C(0x8a3420),cRedB=C(0xa8502e),cGrass=C(0x8b7f48),cGrass2=C(0x6d6a38),cDust=C(0xb7764c),cPit=C(0x74301d),cSand=C(0xc2a07c),tc=new THREE.Color();
+  for(let i=0;i<gp.count;i++){
+    const x=gp.getX(i),z=gp.getZ(i),d=roadDist(x,z),h=terrain(x,z,d);
+    gp.setY(i,h);
+    tc.copy(cRedA).lerp(cRedB,fbm(x*0.05,z*0.05,3));
+    const gr=grassiness(x,z)*smooth(7,15,d);
+    tc.lerp(fbm(x*0.12,z*0.12,2)>0.5?cGrass:cGrass2,gr*0.8);
+    if(d<11)tc.lerp(cDust,(1-d/11)*0.7);
+    const pr=Math.hypot(x-PIT.x,z-PIT.z);
+    if(pr<PIT.r+2)tc.lerp(cPit,smooth(PIT.r+2,PIT.r-6,pr)*0.8);
+    if(x+z>104)tc.lerp(cSand,smooth(104,110,x+z));
+    cols[i*3]=tc.r;cols[i*3+1]=tc.g;cols[i*3+2]=tc.b;
+  }
+  gGeo.setAttribute('color',new THREE.BufferAttribute(cols,3));
+  gGeo.computeVertexNormals();
+  const ground=new THREE.Mesh(gGeo,new THREE.MeshStandardMaterial({vertexColors:true,map:grain,bumpMap:grain,bumpScale:0.035,roughness:1}));
+  ground.receiveShadow=true;scene.add(ground);
+
+  // road ribbon with tyre tracks
+  {
+    const N=500,W=5.4,pos=[],uv=[],idx=[];let dist=0,prev=null;
+    for(let i=0;i<=N;i++){
+      const u=i/N,p=curve.getPointAt(u),t=curve.getTangentAt(u);
+      if(prev)dist+=p.distanceTo(prev);prev=p;
+      const r=new THREE.Vector3(-t.z,0,t.x).normalize();
+      pos.push(p.x+r.x*W,0.05,p.z+r.z*W,p.x-r.x*W,0.05,p.z-r.z*W);
+      uv.push(1,dist/10,0,dist/10);
+      if(i<N){const a=i*2;idx.push(a,a+1,a+2,a+1,a+3,a+2);}
+    }
+    const g=new THREE.BufferGeometry();
+    g.setAttribute('position',new THREE.Float32BufferAttribute(pos,3));
+    g.setAttribute('uv',new THREE.Float32BufferAttribute(uv,2));
+    g.setIndex(idx);g.computeVertexNormals();
+    const tex=roadTexture();
+    const road=new THREE.Mesh(g,new THREE.MeshStandardMaterial({map:tex,roughness:1,transparent:true,depthWrite:false,side:THREE.DoubleSide,polygonOffset:true,polygonOffsetFactor:-2}));
+    road.receiveShadow=true;road.renderOrder=1;scene.add(road);
+  }
+
+  // sea
+  const water=new THREE.Mesh(new THREE.PlaneGeometry(320,320),new THREE.MeshStandardMaterial({color:C(0x3f6f74),roughness:.18,metalness:.25}));
+  water.rotation.x=-Math.PI/2;
+  const waterHolder=new THREE.Group();waterHolder.add(water);
+  waterHolder.rotation.y=Math.PI/4;waterHolder.position.set(168,-0.8,168);
+  scene.add(waterHolder);
+
+  // ---------- helpers ----------
+  const M=(hex,o)=>new THREE.MeshStandardMaterial(Object.assign({color:C(hex),roughness:.8},o||{}));
+  function box(parent,w,h,d,mat,x,y,z,shadow){const m=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),mat);m.position.set(x,y,z);m.castShadow=shadow!==false;m.receiveShadow=true;parent.add(m);return m;}
+  function cyl(parent,rt,rb,h,seg,mat,x,y,z,axis){const g=new THREE.CylinderGeometry(rt,rb,h,seg);if(axis==='x')g.rotateZ(Math.PI/2);if(axis==='z')g.rotateX(Math.PI/2);const m=new THREE.Mesh(g,mat);m.position.set(x,y,z);m.castShadow=true;m.receiveShadow=true;parent.add(m);return m;}
+  // lumpy blob: non-indexed icosahedron, consistent jitter, soft normals
+  function blob(detail,amt,seed){
+    const g=new THREE.IcosahedronGeometry(1,detail),p=g.attributes.position,n=g.attributes.normal,v=new THREE.Vector3();
+    for(let i=0;i<p.count;i++){
+      v.fromBufferAttribute(p,i).normalize();
+      const k=1+(hash(v.x*13.1+seed,v.y*17.3+v.z*7.7)-0.5)*amt;
+      n.setXYZ(i,v.x,v.y,v.z);p.setXYZ(i,v.x*k,v.y*k,v.z*k);
+    }
+    return g;
+  }
+  function merge(list){
+    const arr=list.map(g=>g.index?g.toNonIndexed():g);let n=0;arr.forEach(g=>n+=g.attributes.position.count);
+    const pos=new Float32Array(n*3),nor=new Float32Array(n*3);let o=0;
+    arr.forEach(g=>{pos.set(g.attributes.position.array,o*3);nor.set(g.attributes.normal.array,o*3);o+=g.attributes.position.count;});
+    const m=new THREE.BufferGeometry();m.setAttribute('position',new THREE.BufferAttribute(pos,3));m.setAttribute('normal',new THREE.BufferAttribute(nor,3));return m;
+  }
+  const oreMat=new THREE.MeshStandardMaterial({color:C(0x8a3a22),roughness:1,map:grainSmall,bumpMap:grainSmall,bumpScale:0.05});
+
+  // stockpiles
+  function pile(x,z,r){
+    const g=new THREE.ConeGeometry(r,r*0.75,36,6),p=g.attributes.position;
+    for(let i=0;i<p.count;i++){const px=p.getX(i),py=p.getY(i),pz=p.getZ(i),k=(hash(Math.round(px*10),Math.round(pz*10)+py)-0.5)*0.25;p.setXYZ(i,px*(1+k*0.3),py+k*0.4,pz*(1+k*0.3));}
+    g.computeVertexNormals();
+    const c=new THREE.Mesh(g,oreMat);c.position.set(x,terrain(x,z,roadDist(x,z))+r*0.37-0.15,z);c.castShadow=c.receiveShadow=true;scene.add(c);
+  }
+  pile(-66,-29,3.8);pile(-57,-47,3.3);pile(-72,-38,3.1);
+  pile(66,38,3.4);pile(71,31,3.1);
+
+  // ---------- port ----------
+  const port=new THREE.Group();port.position.set(63,0,51);port.rotation.y=Math.PI/4;scene.add(port);
+  const concrete=new THREE.MeshStandardMaterial({color:C(0x9c968d),roughness:.95,map:grainSmall});
+  box(port,30,1.4,8,concrete,0,-0.6,0);
+  const craneMat=M(0xd9861a,{roughness:.5,metalness:.2});
+  [-7,6].forEach(cx=>{
+    box(port,0.7,9,0.7,craneMat,cx-1.3,4.5,-2.6);box(port,0.7,9,0.7,craneMat,cx+1.3,4.5,-2.6);
+    box(port,0.7,9,0.7,craneMat,cx-1.3,4.5,0.6);box(port,0.7,9,0.7,craneMat,cx+1.3,4.5,0.6);
+    box(port,3.4,0.6,4,craneMat,cx,9.1,-1);
+    box(port,0.9,0.7,16,craneMat,cx,9.8,4.5);
+    box(port,1.8,1.4,1.8,M(0x2a2420),cx,9.1,6);
+  });
+  const ship=new THREE.Group();ship.position.set(0,0,8.8);port.add(ship);
+  const hull=M(0x2a3a48,{roughness:.55,metalness:.3});
+  box(ship,34,3.4,7.2,hull,0,0.2,0);
+  box(ship,34.2,0.7,7.4,M(0x8e2b21),0,-1.05,0);
+  box(ship,5,4.6,6.2,M(0xeeeae2,{roughness:.6}),-13.5,4.1,0);
+  box(ship,5.4,0.3,6.6,M(0xeeeae2),-13.5,6.5,0);
+  cyl(ship,0.5,0.6,2.2,10,M(0x2a2420),-14.5,7.6,0);
+  for(let i=0;i<4;i++){
+    box(ship,5.2,0.6,5.4,M(0x3b4a57),-5+i*6.5,2.2,0);
+    const h=new THREE.Mesh(new THREE.ConeGeometry(2.3,1.5,24),oreMat);h.position.set(-5+i*6.5,3.2,0);h.castShadow=true;ship.add(h);
+  }
+
+  // ---------- vegetation (instanced) ----------
+  function treeCrown(seed){
+    const parts=[];const k=3+Math.floor(hash(seed,1)*3);
+    for(let i=0;i<k;i++){
+      const b=blob(1,0.45,seed*10+i);
+      const s=1.1+hash(seed,i+2)*0.7;b.scale(1.6*s,0.55*s,1.6*s);
+      const a=i/k*6.283+hash(seed,i)*1.2,r=i===0?0:1.1+hash(i,seed)*0.8;
+      b.translate(Math.cos(a)*r,3.4+hash(seed,i+9)*0.7,Math.sin(a)*r);parts.push(b);
+    }
+    return merge(parts);
+  }
+  function treeTrunk(){
+    const t=new THREE.CylinderGeometry(0.11,0.22,3.4,6);t.translate(0,1.7,0);
+    const b1=new THREE.CylinderGeometry(0.06,0.1,1.8,5);b1.translate(0,0.9,0);b1.rotateZ(0.7);b1.translate(0,2.4,0);
+    const b2=new THREE.CylinderGeometry(0.06,0.1,1.6,5);b2.translate(0,0.8,0);b2.rotateZ(-0.6);b2.rotateY(1.8);b2.translate(0,2.6,0);
+    return merge([t,b1,b2]);
+  }
+  function scatter(count,test){
+    const out=[];let guard=0;
+    while(out.length<count&&guard++<count*40){
+      const x=(rnd()-.5)*240,z=(rnd()-.5)*240;
+      if(x+z>101)continue;
+      if(Math.hypot(x-PIT.x,z-PIT.z)<PIT.r+3)continue;
+      const d=roadDist(x,z);if(!test(x,z,d))continue;
+      out.push([x,z,d]);
+    }
+    return out;
+  }
+  const o3=new THREE.Object3D(),icol=new THREE.Color();
+  function instanced(geo,mat,list,scaleFn,colorFn,yOff){
+    const m=new THREE.InstancedMesh(geo,mat,list.length);
+    list.forEach((p,i)=>{
+      o3.position.set(p[0],terrain(p[0],p[1],p[2])+(yOff||0),p[1]);
+      const s=scaleFn();o3.scale.set(s[0],s[1],s[2]);o3.rotation.set(0,rnd()*6.283,0);o3.updateMatrix();
+      m.setMatrixAt(i,o3.matrix);
+      if(colorFn){colorFn(icol);m.setColorAt(i,icol);}
+    });
+    if(m.instanceColor)m.instanceColor.needsUpdate=true;
+    return m;
+  }
+  {
+    const trees=scatter(mobile?150:230,(x,z,d)=>d>15&&rnd()<0.35+grassiness(x,z)*0.65);
+    const trunkG=treeTrunk(),trunkM=M(0x4a3426,{roughness:1});
+    const leafM=new THREE.MeshStandardMaterial({color:0xffffff,roughness:.95});
+    const groups=[[],[],[]];trees.forEach((t,i)=>groups[i%3].push(t));
+    groups.forEach((list,gi)=>{
+      const scales=list.map(()=>{const s=0.75+rnd()*0.8;return [s,s*(0.85+rnd()*0.35),s];});
+      let si=0;const sf=()=>scales[si++];
+      const crown=instanced(treeCrown(gi+1),leafM,list,sf,c=>c.copy(C([0x4e5a2a,0x5d6630,0x45512a][(rnd()*3)|0])).multiplyScalar(0.85+rnd()*0.3));
+      si=0;
+      const trunk=instanced(trunkG,trunkM,list,sf);
+      crown.castShadow=trunk.castShadow=true;crown.receiveShadow=true;
+      scene.add(crown,trunk);
+    });
+    // bushes
+    const bushes=scatter(mobile?220:340,(x,z,d)=>d>9&&rnd()<grassiness(x,z)+0.15);
+    const bush=instanced(blob(1,0.5,77),new THREE.MeshStandardMaterial({color:0xffffff,roughness:1}),bushes,
+      ()=>{const s=0.5+rnd()*0.9;return [s*1.3,s*0.7,s*1.3];},c=>c.copy(C([0x5f6432,0x6e6b3a,0x4f5a2c][(rnd()*3)|0])),0.15);
+    bush.castShadow=true;bush.receiveShadow=true;scene.add(bush);
+    // dry grass tufts
+    const parts=[];for(let i=0;i<8;i++){const h=0.45+rnd()*0.35;const c=new THREE.ConeGeometry(0.025,h,3,1,true);c.translate(0,h/2,0);c.rotateZ((rnd()-.5)*0.9);c.rotateY(i*0.8);c.translate((rnd()-.5)*0.35,0,(rnd()-.5)*0.35);parts.push(c);}
+    const tuftG=merge(parts);
+    const tufts=scatter(mobile?1800:3200,(x,z,d)=>d>5.8&&rnd()<grassiness(x,z)*0.9+0.08);
+    const tuft=instanced(tuftG,new THREE.MeshStandardMaterial({color:0xffffff,roughness:1,side:THREE.DoubleSide}),tufts,
+      ()=>{const s=0.6+rnd()*0.7;return [s,s*(0.7+rnd()*0.6),s];},c=>c.copy(C([0xa89558,0x9a8a4c,0x8c8148,0xb5a066][(rnd()*4)|0])));
+    tuft.receiveShadow=true;scene.add(tuft);
+    // rocks
+    const rocks=scatter(mobile?120:200,(x,z,d)=>d>6.2&&d<28);
+    const rock=instanced(blob(0,0.6,5),new THREE.MeshStandardMaterial({color:0xffffff,roughness:1,map:grainSmall,flatShading:true}),rocks,
+      ()=>{const s=0.15+rnd()*0.45;return [s*1.4,s*0.8,s];},c=>c.copy(C([0x6d3a26,0x8a5038,0x5e3022][(rnd()*3)|0])),0.05);
+    rock.castShadow=true;rock.receiveShadow=true;scene.add(rock);
+  }
+
+  // ---------- trucks ----------
+  const paint=M(0xd4a020,{roughness:.42,metalness:.15});
+  const dark=M(0x1f1b18,{roughness:.85}), steel=M(0x8e8a84,{roughness:.5,metalness:.55});
+  const bodyM=new THREE.MeshStandardMaterial({color:C(0xa9a194),roughness:.8,metalness:.25,map:grainSmall});
+  const glass=M(0x1b252d,{roughness:.08,metalness:.7}), mud=new THREE.MeshStandardMaterial({color:C(0x7d3d25),roughness:1,map:grainSmall});
+  const rimM=M(0xcfcac0,{roughness:.35,metalness:.6}), tireM=new THREE.MeshStandardMaterial({color:C(0x1c1917),roughness:1,map:grainSmall});
+  const lampM=new THREE.MeshStandardMaterial({color:0xfff4d6,emissive:C(0xffe6a8),emissiveIntensity:.6});
+  const tailM=new THREE.MeshStandardMaterial({color:C(0x8a1d14),emissive:C(0x5a0e08),emissiveIntensity:.5});
+
+  function makeTruck(){
+    const g=new THREE.Group();
+    // chassis
+    box(g,0.25,0.32,7.8,dark,0.55,0.95,-0.3);box(g,0.25,0.32,7.8,dark,-0.55,0.95,-0.3);
+    // cab-over cab
+    const cz=2.85;
+    box(g,2.4,1.9,1.8,paint,0,2.15,cz);
+    box(g,2.3,0.22,1.6,paint,0,3.21,cz-0.05);
+    box(g,2.15,0.85,0.05,glass,0,2.58,cz+0.91,false);
+    box(g,2.3,0.12,0.15,paint,0,3.07,cz+0.92);
+    [1,-1].forEach(s=>{
+      box(g,0.05,0.75,0.95,glass,s*1.21,2.58,cz+0.25,false);
+      box(g,0.04,0.9,0.04,dark,s*1.215,1.75,cz-0.45,false);          // door line
+      box(g,0.55,0.05,0.05,dark,s*1.45,2.62,cz+0.72);                // mirror arm
+      box(g,0.07,0.5,0.24,dark,s*1.72,2.5,cz+0.72);                  // mirror
+      box(g,0.35,0.07,0.45,dark,s*1.05,1.0,cz+0.25);                 // step
+      box(g,0.36,0.2,0.05,lampM,s*0.85,1.72,cz+0.92,false);          // headlight
+      box(g,0.62,0.08,1.5,dark,s*1.02,1.38,2.55);                    // front mudguard
+      box(g,0.55,0.65,0.04,dark,s*1.05,0.72,-3.75);                  // mudflap
+      box(g,0.18,0.12,0.04,tailM,s*0.95,1.05,-4.15,false);           // tail light
+    });
+    box(g,1.6,0.55,0.05,dark,0,1.72,cz+0.92,false);
+    for(let i=0;i<4;i++)box(g,1.5,0.045,0.08,steel,0,1.52+i*0.13,cz+0.94,false);
+    box(g,2.5,0.32,0.3,steel,0,1.12,cz+1.0);
+    box(g,2.43,0.35,1.83,mud,0,1.33,cz,false);                        // mud on lower cab
+    cyl(g,0.36,0.36,1.15,16,steel,0.98,1.12,1.25,'z');                 // fuel tank
+    cyl(g,0.08,0.08,1.9,8,dark,-1.0,2.7,1.85);                         // exhaust stack
+    box(g,2.4,0.08,0.08,dark,0,0.92,-4.15);                            // rear bar
+    // dump body
+    const bed=new THREE.Group();bed.position.set(0,1.28,-1.45);g.add(bed);
+    box(bed,2.45,0.16,5.1,bodyM,0,0,0);
+    [1,-1].forEach(s=>{
+      const side=box(bed,0.1,1.35,5.1,bodyM,s*1.21,0.72,0);side.rotation.z=s*0.05;
+      box(bed,0.15,0.13,5.15,steel,s*1.26,1.4,0);
+      for(let z=-2;z<=2;z++)box(bed,0.07,1.3,0.12,steel,s*1.28,0.68,z*1.1,false);
+      box(bed,0.13,0.45,5.12,mud,s*1.27,0.2,0,false);
+    });
+    box(bed,2.6,1.7,0.12,bodyM,0,0.9,2.55);
+    box(bed,2.6,0.1,0.95,bodyM,0,1.72,3.0);
+    box(bed,2.5,1.3,0.12,bodyM,0,0.7,-2.55);
+    box(bed,2.52,0.4,0.14,mud,0,0.2,-2.57,false);
+    const oreG=blob(2,0.35,3);oreG.scale(1.1,0.5,2.2);
+    const ore=new THREE.Mesh(oreG,oreMat);ore.position.set(0,1.05,0);ore.castShadow=true;bed.add(ore);
+    // wheels
+    const wheels=[];
+    function wheel(x,z,dual){
+      const w=new THREE.Group();w.position.set(x,0.62,z);g.add(w);
+      const width=dual?0.78:0.46;
+      cyl(w,0.62,0.62,width,24,tireM,0,0,0,'x');
+      cyl(w,0.34,0.34,width+0.03,14,rimM,0,0,0,'x');
+      cyl(w,0.12,0.12,width+0.07,8,dark,0,0,0,'x');
+      wheels.push(w);
+    }
+    wheel(1.0,2.55,false);wheel(-1.0,2.55,false);
+    [-1.45,-2.8].forEach(z=>{wheel(0.98,z,true);wheel(-0.98,z,true);});
+    scene.add(g);
+    return {g,wheels,ore};
+  }
+  const LANE=2.5;
+  const _p=new THREE.Vector3(),_t=new THREE.Vector3(),_r=new THREE.Vector3(),_look=new THREE.Vector3();
+  function placeTruck(tr,u,dir){
+    curve.getPointAt(u,_p);curve.getTangentAt(u,_t);_t.multiplyScalar(dir);_t.y=0;_t.normalize();
+    _r.set(-_t.z,0,_t.x);
+    tr.g.position.copy(_p).addScaledVector(_r,LANE);tr.g.position.y=0.05;
+    _look.copy(tr.g.position).add(_t);tr.g.lookAt(_look);
+    return {pos:tr.g.position,t:_t,r:_r};
+  }
+  const lead=makeTruck();
+  const fleet=[0.2,0.55].map(o=>({tr:makeTruck(),o,dir:1})).concat([0.1,0.4,0.75].map(o=>({tr:makeTruck(),o,dir:-1})));
+  fleet.forEach(f=>{if(f.dir<0)f.tr.ore.visible=false;});
+
+  // ---------- dust ----------
+  function dustTex(){const c=document.createElement('canvas');c.width=c.height=64;const x=c.getContext('2d');const g=x.createRadialGradient(32,32,0,32,32,32);g.addColorStop(0,'rgba(255,255,255,1)');g.addColorStop(0.5,'rgba(255,255,255,.45)');g.addColorStop(1,'rgba(255,255,255,0)');x.fillStyle=g;x.fillRect(0,0,64,64);return new THREE.CanvasTexture(c);}
+  const DN=mobile?120:200;
+  const dPos=new Float32Array(DN*3),dVel=new Float32Array(DN*3),dLife=new Float32Array(DN);
+  for(let i=0;i<DN;i++)dPos[i*3+1]=-100;
+  const dGeo=new THREE.BufferGeometry();dGeo.setAttribute('position',new THREE.BufferAttribute(dPos,3));
+  const dust=new THREE.Points(dGeo,new THREE.PointsMaterial({color:C(0xc4906a),size:2.6,map:dustTex(),transparent:true,opacity:.28,depthWrite:false}));
+  dust.frustumCulled=false;scene.add(dust);
+  let dHead=0;
+  function spawnDust(pos,t){
+    const i=dHead;dHead=(dHead+1)%DN;
+    dPos[i*3]=pos.x-t.x*3.9+(rnd()-.5)*2;dPos[i*3+1]=0.4;dPos[i*3+2]=pos.z-t.z*3.9+(rnd()-.5)*2;
+    dVel[i*3]=(rnd()-.5)*1.2-t.x*0.8;dVel[i*3+1]=0.5+rnd()*0.9;dVel[i*3+2]=(rnd()-.5)*1.2-t.z*0.8;
+    dLife[i]=1.8+rnd()*0.8;
+  }
+
+
+
+
+  function resize(){const w=innerWidth,h=innerHeight;renderer.setSize(w,h,false);camera.aspect=w/h;camera.fov=w/h<0.9?62:44;camera.updateProjectionMatrix();}
+  addEventListener('resize',resize);resize();
+  const reduce=matchMedia('(prefers-reduced-motion:reduce)').matches;
+  let last=performance.now(),time=0,visible=true,running=true,mx=0,my=0,cmx=0,cmy=0;
+  addEventListener('pointermove',e=>{mx=e.clientX/innerWidth-.5;my=e.clientY/innerHeight-.5;},{passive:true});
+  new IntersectionObserver(es=>{visible=es[0].isIntersecting;if(visible&&!running){running=true;last=performance.now();requestAnimationFrame(frame);}},{threshold:0}).observe(wrapEl);
+  const cp=new THREE.Vector3(),ct=new THREE.Vector3(),tmp=new THREE.Vector3(),tg=new THREE.Vector3();
+  const SPEED=0.0055,START=0.06,SPAN=0.8;
+  let first=true;
+  function frame(now){
+    if(!visible){running=false;return;}
+    const dt=Math.min(0.05,(now-last)/1000);last=now;if(!reduce)time+=dt;
+    const uc=START+((time*SPEED)%SPAN);
+    // lead truck just ahead of the camera
+    const lu=Math.min(0.985,uc+0.035);
+    const st=placeTruck(lead,lu,1);
+    lead.wheels.forEach(w=>w.rotation.x+=dt*LEN*SPEED/0.62);
+    if(!reduce&&Math.random()<0.75)spawnDust(st.pos,st.t);
+    const lp=st.pos.clone(),lt=st.t.clone(),lr=st.r.clone();
+    fleet.forEach(f=>{const raw=(time*0.009+f.o)%1,u=f.dir>0?raw:1-raw;f.tr.g.visible=u>0.02&&u<0.98&&Math.abs(u-lu)>0.03;if(!f.tr.g.visible)return;placeTruck(f.tr,u,f.dir);if(!reduce)f.tr.wheels.forEach(w=>w.rotation.x+=dt*LEN*0.009/0.62);});
+    for(let i=0;i<DN;i++){if(dLife[i]<=0)continue;dLife[i]-=dt;if(dLife[i]<=0){dPos[i*3+1]=-100;continue;}dPos[i*3]+=dVel[i*3]*dt;dPos[i*3+1]+=dVel[i*3+1]*dt;dPos[i*3+2]+=dVel[i*3+2]*dt;dVel[i*3]*=0.98;dVel[i*3+1]*=0.96;dVel[i*3+2]*=0.98;}
+    dGeo.attributes.position.needsUpdate=true;
+    cmx+=(mx-cmx)*0.03;cmy+=(my-cmy)*0.03;
+    const portrait=innerWidth/innerHeight<0.9,k=portrait?1.35:1;
+    const sway=Math.sin(time*0.13)*3;
+    tmp.copy(lp).addScaledVector(lt,-13*k).addScaledVector(lr,(7+sway+cmx*8)*k).addScaledVector(UP,(4.2-cmy*2)*k);
+    tg.copy(lp).addScaledVector(lt,10).addScaledVector(UP,1.2);
+    if(first||reduce){cp.copy(tmp);ct.copy(tg);first=false;}else{const a=Math.min(1,dt*2.5);cp.lerp(tmp,a);ct.lerp(tg,a);}
+    camera.position.copy(cp);camera.lookAt(ct);
+    sky.position.copy(cp);
+    sun.position.set(lp.x-60,24,lp.z+34);sun.target.position.copy(lp);
+    renderer.render(scene,camera);
+    requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
 })();
 </script>
 </body>
